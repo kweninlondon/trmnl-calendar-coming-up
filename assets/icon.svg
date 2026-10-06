@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Upcoming calendar events</title>
+  <rect x="64" y="96" width="384" height="352" rx="40" fill="white" stroke="black" stroke-width="28"/>
+  <path d="M78 192H434" fill="none" stroke="black" stroke-width="28"/>
+  <path d="M160 64V128M352 64V128" fill="none" stroke="black" stroke-width="32" stroke-linecap="round"/>
+  <path d="M128 260L144 276L172 244M128 332L144 348L172 316" fill="none" stroke="black" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M216 260H380M216 332H380M132 396H300" fill="none" stroke="black" stroke-width="20" stroke-linecap="round"/>
+</svg>

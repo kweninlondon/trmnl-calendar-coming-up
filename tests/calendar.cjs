@@ -1,0 +1,22 @@
+const fs = require('fs'), vm = require('vm'), assert = require('assert');
+const context = vm.createContext({console, Date, Intl, URL, AbortSignal, TextDecoder, Uint8Array});
+vm.runInContext(fs.readFileSync('dist/serverless.js','utf8'), context);
+const header='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nX-WR-CALNAME:Lily\r\n';
+const event=(lines)=>'BEGIN:VEVENT\r\n'+lines.join('\r\n')+'\r\nEND:VEVENT\r\n';
+const now=new Date('2026-10-06T12:00:00Z');
+const parse=text=>context.parseFeed(header+text+'END:VCALENDAR\r\n',0,15,'Europe/London',now,Date.now()+1200);
+let feed=parse(event(['UID:a','DTSTART;VALUE=DATE:20270104','DTEND;VALUE=DATE:20270105','SUMMARY:School'])+event(['UID:b','DTSTART:20200101T120000Z','DTEND:20200101T130000Z','SUMMARY:Old']));
+assert.equal(feed.events.length,1); assert.equal(feed.events[0].title,'School');
+feed=parse(event(['UID:r','DTSTART:20261005T120000Z','DTEND:20261005T130000Z','RRULE:FREQ=DAILY;COUNT=8','EXDATE:20261007T120000Z','SUMMARY:Daily'])+event(['UID:r','RECURRENCE-ID:20261008T120000Z','DTSTART:20261008T120000Z','DTEND:20261008T130000Z','STATUS:CANCELLED'])+event(['UID:r','RECURRENCE-ID:20261009T120000Z','DTSTART:20261006T140000Z','DTEND:20261006T150000Z','SUMMARY:Moved']));
+assert.equal(feed.events.length,5); assert.equal(feed.events[1].title,'Moved');
+assert(!feed.events.some(e=>e.date_key==='2026-10-07'||e.date_key==='2026-10-08'||e.date_key==='2026-10-09'));
+feed=parse(event(['UID:tz','DTSTART;TZID=Europe/London:20261007T181500','DTEND;TZID=Europe/London:20261007T191500','SUMMARY:Evening']));
+assert.equal(feed.events[0].time,'18:15');
+feed=parse(event(['UID:annual','DTSTART;VALUE=DATE:20200101','DTEND;VALUE=DATE:20200102','RRULE:FREQ=YEARLY','SUMMARY:Yearly']));
+assert.equal(feed.events.length,15); assert.equal(feed.events[0].date_key,'2027-01-01');
+context.fetch=async ()=>new Response(header+event(['UID:z','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Far ahead'])+'END:VCALENDAR\r\n');
+(async()=>{
+ const result=await context.run({trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics',event_limit:15,group_events:false,footer_override:'Next {count} from {calendar_count}'}}}});
+ assert.equal(result.error,''); assert.equal(result.events[0].group,''); assert.equal(result.footer,'Next 1 from 1');
+ console.log('Passed: ended events, distant events, recurring exclusions, cancellations, moved occurrences, IANA timezone, annual recurrence, settings and footer substitution.');
+})().catch(e=>{console.error(e); process.exitCode=1});

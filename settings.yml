@@ -1,0 +1,68 @@
+- keyname: ics_1
+  field_type: string
+  name: Calendar 1 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: false
+
+- keyname: ics_2
+  field_type: string
+  name: Calendar 2 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_3
+  field_type: string
+  name: Calendar 3 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_4
+  field_type: string
+  name: Calendar 4 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_5
+  field_type: string
+  name: Calendar 5 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: event_limit
+  field_type: number
+  name: Number of upcoming events
+  min: 1
+  max: 15
+  step: 1
+  default: 10
+- keyname: group_events
+  field_type: boolean
+  name: Group by Today, This week, Next week and Later
+  default: true
+- keyname: time_zone
+  field_type: time_zone
+  name: Display timezone
+  description: Used for event times and Monday-to-Sunday week boundaries.
+  default: Europe/London
+- keyname: title_override
+  field_type: string
+  name: Custom title
+  optional: true
+  maxlength: 150
+  group: Title and footer
+  description: Leave blank for the calendar name or Upcoming events.
+  help_text: 'Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
+- keyname: footer_override
+  field_type: string
+  name: Custom footer
+  optional: true
+  maxlength: 150
+  group: Title and footer
+  description: Leave blank for the description or event count.
+  placeholder: 'Next {count} events from {calendar_count} calendars'
+  help_text: 'Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
