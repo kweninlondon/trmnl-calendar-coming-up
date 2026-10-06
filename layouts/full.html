@@ -16,7 +16,12 @@
 </style>
 <div class="layout layout--col layout--top">
   <div class="next-ten">
-    <h1>{{ title | default: 'Coming Up' | escape }}</h1>
+    {% assign display_title = title | default: 'Coming Up' %}
+    {% assign custom_title = trmnl.plugin_settings.custom_fields_values.title_override | strip %}
+    {% if display_title == 'Upcoming events' and custom_title == blank %}
+      {% assign display_title = 'Coming Up' %}
+    {% endif %}
+    <h1>{{ display_title | escape }}</h1>
     {% if error != blank %}<p>{{ error | escape }}</p>{% else %}
     <table>
       <colgroup>
