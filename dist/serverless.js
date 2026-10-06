@@ -105,7 +105,7 @@ async function fetchFeed(url) {
   if (!/^https:\/\/[^\s/]+\//i.test(address)) throw new Error('Use an HTTPS calendar feed link.');
   // TRMNL may provide fetch without the native Web Streams / AbortSignal globals.
   const options = typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function'
-    ? {signal: AbortSignal.timeout(2800)} : {};
+    ? {signal: AbortSignal.timeout(3500)} : {};
   const response = await fetch(address, options);
   if (!response.ok) throw new Error(`Calendar download failed (HTTP ${response.status}).`);
   const declaredSize = Number(response.headers?.get?.('content-length') || 0);

@@ -31,7 +31,7 @@ Weeks run Monday–Sunday. Ended events disappear; ongoing events remain. Empty 
 ## Preview limitations and release work
 
 - Local tests passed: old event removal, distant one-off events, yearly and daily recurrence, EXDATE, cancelled overrides, moved overrides, IANA timezone, settings and placeholder substitution.
-- Live TRMNL runtime has 5 seconds / 128 MB. This preview downloads feeds in parallel with a 2.8-second timeout and 2 MB per-feed cap, then allows 1.2 seconds for processing. Very long recurrence history may hit the processing cap and returns an explanatory error rather than an incomplete list.
+- Live TRMNL runtime has 5 seconds / 128 MB. This preview downloads feeds in parallel with a 3.5-second timeout and 2 MB per-feed cap, then allows 1.2 seconds for processing. Very long recurrence history may hit the processing cap and returns an explanatory error rather than an incomplete list.
 - RANGE=THISANDFUTURE recurrence changes are explicitly rejected for now. This must be supported before claiming broad ICS compatibility.
 - Any failed feed produces an error for the whole display, avoiding a silently incomplete combined list. Private URLs are not included in returned errors.
 - Full-screen layout is the first preview. Fifteen rows plus group headers and row-height gaps may exceed small devices. Device-specific sizing and smaller playlist layouts still need implementation and visual testing before publishing. Do not advertise all layout support yet.
@@ -44,3 +44,5 @@ Documentation:
 - https://kewisch.github.io/ical.js/api/ICAL.Event.html
 
 ICAL.js 2.2.1 is bundled unmodified from its npm distribution under MPL-2.0. Source: https://github.com/kewisch/ical.js/tree/v2.2.1 . The author-written application code follows the bundled library in serverless.js.
+
+Live polling finding: direct Google ICS polling can fail with Malformed JSON before Serverless runs. Use the public JSON trigger URL above and let Serverless fetch all configured feeds in parallel. Native polling text acceptance is not confirmed.
