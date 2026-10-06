@@ -16,7 +16,7 @@
 </style>
 <div class="layout layout--col layout--top">
   <div class="next-ten">
-    <h1>{{ title | default: 'Upcoming events' | escape }}</h1>
+    <h1>{{ title | default: 'Coming Up' | escape }}</h1>
     {% if error != blank %}<p>{{ error | escape }}</p>{% else %}
     <table>
       <colgroup>
