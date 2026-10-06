@@ -164,7 +164,7 @@ async function run(input) {
     const values = {count: events.length, limit, calendars: feeds.map(f => f.name).join(', '), calendar_count: feeds.length,
       description: feeds.length === 1 ? feeds[0].description : ''};
     const expand = value => clean(String(value).replace(/\{(count|limit|calendars|calendar_count|description)\}/g, (_, key) => values[key]), 150);
-    const defaultTitle = feeds.length === 1 ? feeds[0].name : 'Upcoming events';
+    const defaultTitle = 'Coming Up';
     const defaultFooter = values.description || `Next ${events.length} events from ${feeds.length} calendar${feeds.length === 1 ? '' : 's'}`;
     return {title: expand(fields.title_override || defaultTitle), footer: expand(fields.footer_override || defaultFooter),
       events, show_calendar: feeds.length > 1, grouping, count: events.length,
@@ -172,7 +172,7 @@ async function run(input) {
   } catch (error) {
     // Never echo private feed URLs or parser input into screen/error output.
     const safe = /^(Add at least|Use an HTTPS|Calendar download failed|Calendar feed exceeds|Expected an ICS|This feed uses|Calendar is too complex|Recurrence expansion)/.test(error.message);
-    return {title: 'Upcoming events', footer: 'Check calendar settings', events: [], count: 0,
+    return {title: 'Coming Up', footer: 'Check calendar settings', events: [], count: 0,
       error: safe ? error.message : `Calendar error during ${stage} (${error.name || 'Error'}). Please report this message.`,
       input_keys: Object.keys(input).filter(k => k !== 'trmnl'), polled_feed_count: polledFeeds(input).length, updated: ''};
   }

@@ -22,7 +22,7 @@ For Google Calendar, the feed is found under calendar Settings > Integrate calen
 
 ## Settings
 
-Five calendar inputs (four optional), 1–15 upcoming events combined across all feeds, grouping on/off, display timezone, optional title and footer. Blank title uses the feed's calendar name for one feed or Upcoming events for several. Blank footer uses the single feed's description if present, otherwise the displayed event/calendar counts.
+Five calendar inputs (four optional), 1–15 upcoming events combined across all feeds, grouping on/off, display timezone, optional title and footer. Blank title uses Coming Up. Blank footer uses the single feed's description if present, otherwise the displayed event/calendar counts.
 
 Optional placeholders: {count} means actual selected event count; {limit} means requested maximum; {calendars} means feed names; {calendar_count} means distinct input feeds; {description} means the description of a single feed. Example: Next {count} events from {calendar_count} calendars.
 

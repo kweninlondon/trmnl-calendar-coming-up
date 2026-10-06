@@ -10,7 +10,7 @@ Display the next events from up to five ICS calendars, however far ahead they ar
 - Choose 1–15 events (default 10), with no future date cutoff.
 - Optional Today / This week / Next week / Later groups; empty groups stay hidden.
 - Monday–Sunday weeks in the selected display timezone.
-- Automatic calendar name and description for one feed; optional title and footer overrides.
+- Default title Coming Up; automatic description for one feed; optional title and footer overrides.
 - Placeholders: `{count}`, `{limit}`, `{calendars}`, `{calendar_count}`, `{description}`.
 - Ongoing events remain until they end. Recurring occurrences count separately.
 
