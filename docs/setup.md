@@ -46,3 +46,5 @@ Documentation:
 ICAL.js 2.2.1 is bundled unmodified from its npm distribution under MPL-2.0. Source: https://github.com/kewisch/ical.js/tree/v2.2.1 . The author-written application code follows the bundled library in serverless.js.
 
 Live polling finding: direct Google ICS polling can fail with Malformed JSON before Serverless runs. Use the public JSON trigger URL above and let Serverless fetch all configured feeds in parallel. Native polling text acceptance is not confirmed.
+
+Build size: the modern Node-compatible ICAL.js distribution is used rather than its larger ES5 compatibility build. The build fails if the final UTF-8 bundle reaches 100,000 bytes, matching the live editor limit.
