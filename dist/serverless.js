@@ -115,6 +115,26 @@ async function fetchFeed(url) {
   if (!text.trimStart().startsWith('BEGIN:VCALENDAR')) throw new Error('Expected an ICS calendar feed, but the link returned another page.');
   return text;
 }
+// Native polling can supply raw text inside a payload wrapper. Find calendar
+// strings without depending on a particular TRMNL plaintext wrapper key.
+function polledFeeds(input) {
+  const found = [];
+  const visited = new Set();
+  function visit(value, depth) {
+    if (depth > 8 || value == null) return;
+    if (typeof value === 'string') {
+      if (value.trimStart().startsWith('BEGIN:VCALENDAR')) found.push(value);
+      return;
+    }
+    if (typeof value !== 'object' || visited.has(value)) return;
+    visited.add(value);
+    for (const [key, child] of Object.entries(value)) {
+      if (key !== 'trmnl' && key !== 'custom_fields_values') visit(child, depth + 1);
+    }
+  }
+  visit(input, 0);
+  return [...new Set(found)];
+}
 async function run(input) {
   const fields = input.trmnl?.plugin_settings?.custom_fields_values || input.custom_fields_values || {};
   const limit = Math.max(1, Math.min(15, parseInt(fields.event_limit, 10) || 10));
@@ -127,7 +147,8 @@ async function run(input) {
     parts(now, zone); // Validate timezone before processing any feed.
     if (!urls.length) throw new Error('Add at least one ICS calendar link in settings.');
     stage = 'download';
-    const downloaded = await Promise.all(urls.map(url => fetchFeed(url)));
+    const polled = polledFeeds(input);
+    const downloaded = polled.length === urls.length ? polled : await Promise.all(urls.map(url => fetchFeed(url)));
     stage = 'parse';
     const deadline = Date.now() + 1200;
     const feeds = downloaded.map((text, i) => parseFeed(text, i, limit, zone, now, deadline));
@@ -152,6 +173,7 @@ async function run(input) {
     // Never echo private feed URLs or parser input into screen/error output.
     const safe = /^(Add at least|Use an HTTPS|Calendar download failed|Calendar feed exceeds|Expected an ICS|This feed uses|Calendar is too complex|Recurrence expansion)/.test(error.message);
     return {title: 'Upcoming events', footer: 'Check calendar settings', events: [], count: 0,
-      error: safe ? error.message : `Calendar error during ${stage} (${error.name || 'Error'}). Please report this message.`, updated: ''};
+      error: safe ? error.message : `Calendar error during ${stage} (${error.name || 'Error'}). Please report this message.`,
+      input_keys: Object.keys(input).filter(k => k !== 'trmnl'), polled_feed_count: polledFeeds(input).length, updated: ''};
   }
 }
