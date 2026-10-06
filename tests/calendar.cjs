@@ -14,7 +14,8 @@ feed=parse(event(['UID:tz','DTSTART;TZID=Europe/London:20261007T181500','DTEND;T
 assert.equal(feed.events[0].time,'18:15');
 feed=parse(event(['UID:annual','DTSTART;VALUE=DATE:20200101','DTEND;VALUE=DATE:20200102','RRULE:FREQ=YEARLY','SUMMARY:Yearly']));
 assert.equal(feed.events.length,15); assert.equal(feed.events[0].date_key,'2027-01-01');
-context.fetch=async ()=>new Response(header+event(['UID:z','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Far ahead'])+'END:VCALENDAR\r\n');
+context.AbortSignal = undefined;
+context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+event(['UID:z','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Far ahead'])+'END:VCALENDAR\r\n'});
 (async()=>{
  const result=await context.run({trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics',event_limit:15,group_events:false,footer_override:'Next {count} from {calendar_count}'}}}});
  assert.equal(result.error,''); assert.equal(result.events[0].group,''); assert.equal(result.footer,'Next 1 from 1');

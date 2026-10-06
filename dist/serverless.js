@@ -101,21 +101,19 @@ function parseFeed(text, index, limit, zone, now, deadline) {
   return {name, description, events: rows.slice(0, limit)};
 }
 async function fetchFeed(url) {
-  const parsed = new URL(url.replace(/^webcal:/i, 'https:'));
-  if (parsed.protocol !== 'https:') throw new Error('Use an HTTPS calendar feed link.');
-  const response = await fetch(parsed.href, {signal: AbortSignal.timeout(2800)});
+  const address = url.replace(/^webcal:/i, 'https:');
+  if (!/^https:\/\/[^\s/]+\//i.test(address)) throw new Error('Use an HTTPS calendar feed link.');
+  // TRMNL may provide fetch without the native Web Streams / AbortSignal globals.
+  const options = typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function'
+    ? {signal: AbortSignal.timeout(2800)} : {};
+  const response = await fetch(address, options);
   if (!response.ok) throw new Error(`Calendar download failed (HTTP ${response.status}).`);
-  const reader = response.body.getReader();
-  let total = 0; const chunks = [];
-  while (true) {
-    const {done, value} = await reader.read(); if (done) break;
-    total += value.length;
-    if (total > 2000000) { await reader.cancel(); throw new Error('Calendar feed exceeds the 2 MB preview limit.'); }
-    chunks.push(value);
-  }
-  const bytes = new Uint8Array(total); let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-  return new TextDecoder().decode(bytes);
+  const declaredSize = Number(response.headers?.get?.('content-length') || 0);
+  if (declaredSize > 2000000) throw new Error('Calendar feed exceeds the 2 MB preview limit.');
+  const text = await response.text();
+  if (text.length > 2000000) throw new Error('Calendar feed exceeds the 2 MB preview limit.');
+  if (!text.trimStart().startsWith('BEGIN:VCALENDAR')) throw new Error('Expected an ICS calendar feed, but the link returned another page.');
+  return text;
 }
 async function run(input) {
   const fields = input.trmnl?.plugin_settings?.custom_fields_values || input.custom_fields_values || {};
@@ -124,12 +122,16 @@ async function run(input) {
   const now = new Date();
   const grouping = ![false, 'false', 'no', '0'].includes(fields.group_events);
   const urls = [...new Set([1, 2, 3, 4, 5].map(i => String(fields[`ics_${i}`] || '').trim()).filter(Boolean))];
+  let stage = 'timezone';
   try {
     parts(now, zone); // Validate timezone before processing any feed.
     if (!urls.length) throw new Error('Add at least one ICS calendar link in settings.');
+    stage = 'download';
     const downloaded = await Promise.all(urls.map(url => fetchFeed(url)));
+    stage = 'parse';
     const deadline = Date.now() + 1200;
     const feeds = downloaded.map((text, i) => parseFeed(text, i, limit, zone, now, deadline));
+    stage = 'format';
     const selected = feeds.flatMap(f => f.events).sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title)).slice(0, limit);
     const today = dayKey(now, zone);
     const monday = new Date(today + 'T00:00:00Z');
@@ -150,6 +152,6 @@ async function run(input) {
     // Never echo private feed URLs or parser input into screen/error output.
     const safe = /^(Add at least|Use an HTTPS|Calendar download failed|Calendar feed exceeds|Expected an ICS|This feed uses|Calendar is too complex|Recurrence expansion)/.test(error.message);
     return {title: 'Upcoming events', footer: 'Check calendar settings', events: [], count: 0,
-      error: safe ? error.message : 'Unable to read the feed. Check the ICS link and timezone, or try a smaller calendar.', updated: ''};
+      error: safe ? error.message : `Calendar error during ${stage} (${error.name || 'Error'}). Please report this message.`, updated: ''};
   }
 }
