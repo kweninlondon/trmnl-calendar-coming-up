@@ -24,11 +24,14 @@ context.AbortSignal = undefined;
 context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+event(['UID:z','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Far ahead'])+'END:VCALENDAR\r\n'});
 (async()=>{
  const result=await context.run({trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics',event_limit:15,group_events:false,footer_override:'Next {count} from {calendar_count}'}}}});
+ assert.equal(result.title,'Coming Up in Lily'); assert.equal(result.title_count_template,'Coming Up in Lily');
  assert.equal(result.error,''); assert.equal(result.events[0].group,''); assert.equal(result.footer,'Next 1 from 1');
  const polledText = header+event(['UID:p','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Native polling'])+'END:VCALENDAR\r\n';
  context.fetch=async()=>{throw new Error('Should not fetch when polling supplied ICS');};
  const native=await context.run({data:polledText,trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics'}}}});
  assert.equal(native.error,''); assert.equal(native.events[0].title,'Native polling');
+ const custom=await context.run({data:polledText,trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics',title_override:'My agenda'}}}});
+ assert.equal(custom.title,'My agenda');
  const fields={event_limit:15,group_events:true,footer_override:'{count} visible / {limit} max / {calendar_count} calendars'};
  const fixtures={};
  for(let i=1;i<=5;i++){
@@ -38,6 +41,7 @@ context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+
  }
  context.fetch=async address=>({ok:true,headers:{get:()=>null},text:async()=>fixtures[address]});
  const five=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});
+ assert.equal(five.title,'Coming Up'); assert.equal(five.title_count_template,'Coming Up');
  assert.equal(five.error,'');assert.equal(five.events.length,15);assert.equal(five.footer,'15 visible / 15 max / 5 calendars');
  assert.equal(five.footer_count_template,'{count} visible / 15 max / 5 calendars');assert(five.show_calendar);
  assert.deepEqual(Array.from(five.events.slice(0,5),e=>e.calendar),['Calendar 1','Calendar 2','Calendar 3','Calendar 4','Calendar 5']);

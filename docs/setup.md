@@ -38,7 +38,7 @@ Keep private feed links in plugin settings. Do not commit them to GitHub or incl
 
 ## Title and footer
 
-Default title: **Coming Up**. Default footer: the description for a single calendar, if present; otherwise **X events coming up**. Both can be overridden.
+Default title: **Coming Up in [calendar name]** for one calendar, or **Coming Up** for multiple calendars. Default footer: the description for a single calendar, if present; otherwise **X events coming up**. Both can be overridden.
 
 | Placeholder | Meaning |
 | --- | --- |

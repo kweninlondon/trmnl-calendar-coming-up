@@ -174,7 +174,7 @@ async function run(input) {
     const values = {count: events.length, limit, calendars: feeds.map(f => f.name).join(', '), calendar_count: feeds.length,
       description: feeds.length === 1 ? feeds[0].description : ''};
     const expand = value => clean(String(value).replace(/\{(count|limit|calendars|calendar_count|description)\}/g, (_, key) => values[key]), 150);
-    const defaultTitle = 'Coming Up';
+    const defaultTitle = feeds.length === 1 ? 'Coming Up in {calendars}' : 'Coming Up';
     const defaultFooter = values.description || '{count} events coming up';
     const countTemplate = value => clean(String(value).replace(/\{(limit|calendars|calendar_count|description)\}/g, (_, key) => values[key]), 150);
     return {title: expand(fields.title_override || defaultTitle), footer: expand(fields.footer_override || defaultFooter),

@@ -56,7 +56,7 @@
   optional: true
   maxlength: 150
   group: Title and footer
-  description: Leave blank for Coming Up.
+  description: Leave blank for Coming Up in the calendar name, or Coming Up for multiple calendars.
   help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
 - keyname: footer_override
   field_type: string
