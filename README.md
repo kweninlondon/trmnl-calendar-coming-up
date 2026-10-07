@@ -37,7 +37,7 @@ Edit `src/serverless.js`, then rebuild the bundled `dist/serverless.js`. The pin
 
 ## Current limitations
 
-Full-screen layout only; small playlist layouts and fitting 15 events with group headers need visual testing. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
+Full-screen layout adapts to available height and shows + X more events when rows do not fit. Local browser checks passed at 800×480 and 1200×900; live TRMNL OG confirmation and small playlist layouts remain. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
 
 ## License
 

@@ -48,3 +48,5 @@ ICAL.js 2.2.1 is bundled unmodified from its npm distribution under MPL-2.0. Sou
 Live polling finding: direct Google ICS polling can fail with Malformed JSON before Serverless runs. Use the public JSON trigger URL above and let Serverless fetch all configured feeds in parallel. Native polling text acceptance is not confirmed.
 
 Build size: the modern Node-compatible ICAL.js distribution is used rather than its larger ES5 compatibility build. The build fails if the final UTF-8 bundle reaches 100,000 bytes, matching the live editor limit.
+
+OG overflow: copy the latest full.html. It measures available height, preserves readable rows and shows + X more events for the selected events that do not fit. There may be fewer visible rows to reserve the notice itself. Browser test: tests/layout.cjs (requires Playwright and a Chromium browser; optional BROWSER_PATH).

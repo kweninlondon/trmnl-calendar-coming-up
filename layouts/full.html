@@ -3,7 +3,9 @@
   .next-ten, .next-ten h1, .next-ten td, .next-ten th {
     font-family: Arial, Helvetica, sans-serif;
   }
-  .next-ten { width: 100%; padding: 8px 20px; }
+  .next-ten { width: 100%; padding: 8px 20px; box-sizing: border-box; }
+  .next-ten .more-events { font-size: 15px; font-weight: 600; line-height: 20px; margin: 6px 0 0; }
+  .next-ten [hidden] { display: none !important; }
   .next-ten h1 { font-size: 25px; margin: 0 0 5px; font-weight: 700; }
   .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .next-ten td { border-bottom: 1px solid black; height: 25px; padding: 2px 0; font-size: 18px; vertical-align: middle; }
@@ -38,7 +40,7 @@
       <tr class="section"><th colspan="3">{{ event.group | escape }}</th></tr>
       {% assign previous_group = event.group %}
       {% endif %}
-      <tr>
+      <tr class="event-row">
         <td class="date">{{ event.date | escape }}</td>
         <td class="time">{{ event.time | escape }}</td>
         <td class="event">{{ event.title | escape }}{% if show_calendar %}<span class="calendar-label"> · {{ event.calendar | escape }}</span>{% endif %}</td>
@@ -47,6 +49,7 @@
       <tr><td>No upcoming events.</td></tr>
       {% endfor %}
     </table>
+    <p class="more-events" hidden></p>
     {% endif %}
   </div>
 </div>
@@ -54,3 +57,45 @@
   <span class="title">{{ footer | escape }}</span>
   <span class="instance">Updated {{ updated | escape }}</span>
 </div>
+
+<script>
+(function () {
+  function fitCalendar() {
+    document.querySelectorAll('.next-ten').forEach(function (root) {
+      const table = root.querySelector('table');
+      const notice = root.querySelector('.more-events');
+      if (!table || !notice) return;
+      const rows = Array.from(table.querySelectorAll('tr'));
+      const events = rows.filter(row => row.classList.contains('event-row'));
+      if (!events.length) return;
+      rows.forEach(row => { row.hidden = false; });
+      notice.hidden = true;
+      const layout = root.closest('.layout');
+      const screen = root.closest('.screen') || layout.parentElement;
+      const footer = screen.querySelector('.title_bar');
+      const bottom = Math.min(layout.getBoundingClientRect().bottom,
+        footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
+      if (table.getBoundingClientRect().bottom <= bottom) return;
+      notice.hidden = false;
+      let visible = events.length;
+      while (visible > 0) {
+        const firstHidden = rows.indexOf(events[visible - 1]);
+        rows.slice(firstHidden).forEach(row => { row.hidden = true; });
+        visible--;
+        // Remove headings and gaps with no remaining event beneath them.
+        let lastEvent = visible ? rows.indexOf(events[visible - 1]) : -1;
+        rows.forEach((row, index) => { if (index > lastEvent) row.hidden = true; });
+        notice.textContent = '+ ' + (events.length - visible) + ' more event' + (events.length - visible === 1 ? '' : 's');
+        if (notice.getBoundingClientRect().bottom <= bottom) break;
+      }
+    });
+  }
+  function ready() {
+    fitCalendar();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCalendar);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
+  else ready();
+  window.addEventListener('resize', fitCalendar);
+})();
+</script>
