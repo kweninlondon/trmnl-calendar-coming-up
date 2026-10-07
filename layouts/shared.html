@@ -1,5 +1,19 @@
 <!-- Shared styles and responsive fitting used by all four layout tabs. -->
 <style>
+  /* Each element supplies its own dimensions; child elements inherit typography normally. */
+  :where(.next-ten, .next-ten *, .calendar-horizontal, .calendar-horizontal > h1) {
+    --agenda-type: initial;
+    --agenda-inset: initial;
+    --agenda-space: initial;
+    --agenda-align: initial;
+  }
+  .next-ten, .next-ten *, .calendar-horizontal > h1 {
+    font-size: var(--agenda-type, inherit);
+    padding: var(--agenda-inset, 0);
+    margin: var(--agenda-space, 0);
+    text-align: var(--agenda-align, inherit);
+  }
+  .calendar-horizontal { padding-top: var(--agenda-top, 0); }
   .next-ten, .next-ten h1, .next-ten td, .next-ten th {
     font-family: Arial, Helvetica, sans-serif;
   }

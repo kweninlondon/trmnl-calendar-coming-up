@@ -1,13 +1,13 @@
 <!-- Paste into the TRMNL private plugin's Full layout. Use full screen. -->
 <style>
-  .next-ten { width: 100%; padding: 8px 20px; box-sizing: border-box; }
-  .next-ten h1 { font-size: 25px; margin: 0 0 5px; font-weight: 700; }
-  .next-ten td { border-bottom: 1px solid black; height: 25px; padding: 2px 0; font-size: 18px; vertical-align: middle; }
-  .next-ten .section th { text-align: left; font-size: 16px; font-weight: 700; padding: 5px 6px 3px; background: black; color: white; }
-  .next-ten .group-gap td { height: 25px; padding: 2px 0; border-bottom: 1px solid transparent; font-size: 0; line-height: 0; }
-  .next-ten .date { font-size: 15px; }
-  .next-ten .time { font-size: 15px; }
-  .next-ten .calendar-label { font-size: 13px; font-weight: 400; }
+  .next-ten { width: 100%; --agenda-inset: 8px 20px; box-sizing: border-box; }
+  .next-ten h1 { --agenda-type: 25px; --agenda-space: 0 0 5px; font-weight: 700; }
+  .next-ten td { border-bottom: 1px solid black; height: 25px; --agenda-inset: 2px 0; --agenda-type: 18px; vertical-align: middle; }
+  .next-ten .section th { --agenda-align: left; --agenda-type: 16px; font-weight: 700; --agenda-inset: 5px 6px 3px; background: black; color: white; }
+  .next-ten .group-gap td { height: 25px; --agenda-inset: 2px 0; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+  .next-ten .date { --agenda-type: 15px; }
+  .next-ten .time { --agenda-type: 15px; }
+  .next-ten .calendar-label { --agenda-type: 13px; font-weight: 400; }
   .next-ten .event { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
 </style>
 <div class="layout layout--col layout--top">

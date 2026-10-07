@@ -1,14 +1,14 @@
 <!-- Paste into the TRMNL private plugin's Quadrant layout. -->
 <style>
-  .next-ten { width: 100%; padding: 4px 8px; box-sizing: border-box; }
-  .next-ten h1 { font-size: 17px; margin: 0 0 5px; font-weight: 700; }
-  .next-ten td { border-bottom: 1px solid black; height: 20px; padding: 2px 0; font-size: 13px; vertical-align: middle; }
-  .next-ten .section th { text-align: left; font-size: 12px; font-weight: 700; padding: 3px 5px 2px; background: black; color: white; }
-  .next-ten .group-gap td { height: 6px; padding: 2px 0; border-bottom: 1px solid transparent; font-size: 0; line-height: 0; }
-  .next-ten .date { font-size: 12px; }
-  .next-ten .time { font-size: 12px; }
-  .next-ten .calendar-label { display: block; font-size: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
-  .next-ten .event { font-weight: 600; padding: 3px 0; }
+  .next-ten { width: 100%; --agenda-inset: 4px 8px; box-sizing: border-box; }
+  .next-ten h1 { --agenda-type: 17px; --agenda-space: 0 0 5px; font-weight: 700; }
+  .next-ten td { border-bottom: 1px solid black; height: 20px; --agenda-inset: 2px 0; --agenda-type: 13px; vertical-align: middle; }
+  .next-ten .section th { --agenda-align: left; --agenda-type: 12px; font-weight: 700; --agenda-inset: 3px 5px 2px; background: black; color: white; }
+  .next-ten .group-gap td { height: 6px; --agenda-inset: 2px 0; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+  .next-ten .date { --agenda-type: 12px; }
+  .next-ten .time { --agenda-type: 12px; }
+  .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+  .next-ten .event { font-weight: 600; --agenda-inset: 3px 0; }
   .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 16px; max-height: 32px; }
 </style>
 <div class="layout layout--col layout--top">

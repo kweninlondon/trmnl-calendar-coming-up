@@ -67,3 +67,23 @@
   description: Leave blank for the description or event count.
   placeholder: '{count} events coming up'
   help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
+
+- keyname: about_coming_up
+  name: About Coming Up
+  field_type: author_bio
+  category: calendar,productivity
+  github_url: https://github.com/kweninlondon/trmnl-calendar-coming-up
+  learn_more_url: https://github.com/kweninlondon/trmnl-calendar-coming-up#readme
+  description: >-
+    Coming Up displays your next calendar events, however far ahead they are.
+    Combine up to five ICS calendars into one chronological agenda, with a maximum
+    of 15 events. The layout shows as many events as fit on your screen.<br><br>
+    Optionally group events into Today, This week, Next week and Later, using
+    Monday-to-Sunday weeks. A single calendar uses its name in the default title;
+    multiple calendars display a label alongside each event. Customise the title
+    and footer with calendar names and automatic visible event counts.<br><br>
+    Includes full screen, half vertical, two-column half horizontal and quadrant
+    layouts. Just enter your ICS links; no additional calendar scripts or hosting
+    accounts are required.<br><br>
+    Created by Quentin Vien. For setup instructions, source code or support,
+    visit the GitHub repository and open an issue.

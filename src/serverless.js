@@ -151,7 +151,7 @@ async function run(input) {
   const zone = fields.time_zone || input.trmnl?.user?.time_zone || 'UTC';
   const now = new Date();
   const grouping = ![false, 'false', 'no', '0'].includes(fields.group_events);
-  const urls = [...new Set([1, 2, 3, 4, 5].map(i => String(fields[`ics_${i}`] || '').trim()).filter(Boolean))];
+  const urls = [...new Set([fields.ics_1, fields.ics_2, fields.ics_3, fields.ics_4, fields.ics_5].map(value => String(value || '').trim()).filter(Boolean))];
   let stage = 'timezone';
   try {
     parts(now, zone); // Validate timezone before processing any feed.
