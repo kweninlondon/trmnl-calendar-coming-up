@@ -12,9 +12,10 @@ Icon: assets/icon.svg (512 × 512)
 Categories: calendar, productivity
 
 Before submitting:
-- Complete a live smoke test of the refactored Shared version.
-- Test five real feeds and verify refresh health.
-- Test export/import into a fresh private plugin: verify settings, Serverless, Shared and all layouts.
+- [x] Complete a live smoke test of the refactored Shared version.
+- [ ] Optional additional coverage: test five real feeds (five mocked feeds pass; two live feeds tested).
+- [x] Export/import into a fresh private plugin and confirm calendar events display.
+- Export/import does not carry the uploaded icon in the tested workflow; upload it again on the imported copy.
 - Add screenshots with fictional calendars or redact personal events.
 - Confirm the GitHub repository visibility and merge the draft PR only when authorized.
 - In TRMNL, Publish as a Recipe and review the submission before publishing.

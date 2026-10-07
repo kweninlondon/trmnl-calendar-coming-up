@@ -2,7 +2,7 @@
 
 Display upcoming events from up to five ICS calendars, however far ahead they are.
 
-**Status: private preview.** Two live feeds and all four layouts have been tested by the author in TRMNL. The latest Shared refactor and expanded recurrence handling need a final live smoke test before publication.
+**Status: ready for recipe submission.** The author has tested two live feeds, all four layouts, the Shared refactor, custom titles and footers, and a successful export/import into a fresh private plugin.
 
 ## Features
 
@@ -11,6 +11,7 @@ Display upcoming events from up to five ICS calendars, however far ahead they ar
 - Optional Today / This week / Next week / Later grouping, with Monday–Sunday weeks.
 - Full, half vertical, two-column half horizontal and quadrant layouts.
 - Separate calendar labels and two-line event names in compact layouts.
+- Default title includes the calendar name for a single feed; multiple feeds use Coming Up.
 - Custom title/footer, with `{count}` reporting visible events and `{limit}` reporting the chosen maximum.
 - Recurring events, excluded occurrences, moved occurrences and future occurrence changes/cancellations.
 
@@ -35,7 +36,7 @@ node tests/calendar.cjs
 
 Edit `src/serverless.js`, then rebuild `dist/serverless.js`. The build enforces TRMNL's 100 KB code limit. Browser test instructions are in [the setup guide](docs/setup.md).
 
-Tests cover five feeds, invalid links, recurrence exceptions and future changes, timezones, layout fitting, chronological ordering and visible counts. Large or slow feeds can exceed TRMNL's runtime limits; see the setup guide. Five-feed live testing and recipe export/import remain release checks.
+Tests cover five feeds, invalid links, recurrence exceptions and future changes, timezones, layout fitting, chronological ordering and visible counts. Large or slow feeds can exceed TRMNL's runtime limits; see the setup guide. Five feeds are covered by automated tests; live testing has used two feeds.
 
 ## License
 
