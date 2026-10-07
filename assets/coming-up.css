@@ -1,0 +1,65 @@
+/* Coming Up: shared, scoped calendar styles. Native spacing utilities are supplied by TRMNL. */
+/* Each element supplies its own dimensions; child elements inherit typography normally. */
+  :where(.next-ten, .next-ten *, .calendar-horizontal, .calendar-horizontal > h1) {
+    --agenda-type: initial;
+  }
+  .next-ten, .next-ten *, .calendar-horizontal > h1 {
+    font-size: var(--agenda-type, inherit);
+  }
+  .next-ten, .next-ten h1, .next-ten td, .next-ten th {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .next-ten [hidden] { display: none !important; }
+.agenda-full .next-ten { width: 100%; box-sizing: border-box; }
+.agenda-full .next-ten h1 { --agenda-type: 25px; font-weight: 700; }
+.agenda-full .next-ten td { border-bottom: 1px solid black; height: 25px; --agenda-type: 18px; vertical-align: middle; }
+.agenda-full .next-ten .section th { --agenda-type: 16px; font-weight: 700; background: black; color: white; }
+.agenda-full .next-ten .group-gap td { height: 25px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+.agenda-full .next-ten .date { --agenda-type: 15px; }
+.agenda-full .next-ten .time { --agenda-type: 15px; }
+.agenda-full .next-ten .calendar-label { --agenda-type: 13px; font-weight: 400; }
+.agenda-full .next-ten .event { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+.agenda-full .agenda-date-col { width: 145px; }
+.agenda-full .agenda-time-col { width: 65px; }
+.agenda-half-vertical .next-ten { width: 100%; box-sizing: border-box; }
+.agenda-half-vertical .next-ten h1 { --agenda-type: 20px; font-weight: 700; }
+.agenda-half-vertical .next-ten td { border-bottom: 1px solid black; height: 22px; --agenda-type: 14px; vertical-align: middle; }
+.agenda-half-vertical .next-ten .section th { --agenda-type: 13px; font-weight: 700; background: black; color: white; }
+.agenda-half-vertical .next-ten .group-gap td { height: 22px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+.agenda-half-vertical .next-ten .date { --agenda-type: 12px; }
+.agenda-half-vertical .next-ten .time { --agenda-type: 12px; }
+.agenda-half-vertical .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+.agenda-half-vertical .next-ten .event { font-weight: 600; }
+.agenda-half-vertical .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 17px; max-height: 34px; }
+.agenda-half-vertical .agenda-date-col { width: 90px; }
+.agenda-half-vertical .agenda-time-col { width: 45px; }
+.agenda-half-horizontal .next-ten { width: 50%; min-width: 0; box-sizing: border-box; }
+.agenda-half-horizontal .next-ten h1 { --agenda-type: 20px; font-weight: 700; }
+.agenda-half-horizontal .next-ten td { border-bottom: 1px solid black; height: 22px; --agenda-type: 14px; vertical-align: middle; }
+.agenda-half-horizontal .next-ten .section th { --agenda-type: 13px; font-weight: 700; background: black; color: white; }
+.agenda-half-horizontal .next-ten .group-gap td { height: 22px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+.agenda-half-horizontal .next-ten .date { --agenda-type: 12px; }
+.agenda-half-horizontal .next-ten .time { --agenda-type: 12px; }
+.agenda-half-horizontal .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+.agenda-half-horizontal .next-ten .event { font-weight: 600; }
+.agenda-half-horizontal .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 17px; max-height: 34px; }
+.agenda-half-horizontal { }
+.agenda-half-horizontal > h1 { font-family: Arial, Helvetica, sans-serif; --agenda-type: 20px; font-weight: 700; }
+.agenda-half-horizontal .calendar-columns { display: flex; width: 100%; }
+.agenda-half-horizontal .calendar-columns > .next-ten + .next-ten { border-left: 1px solid black; }
+.agenda-half-horizontal .group-gap td { height: 8px; border: 0; }
+.agenda-half-horizontal .agenda-date-col { width: 90px; }
+.agenda-half-horizontal .agenda-time-col { width: 45px; }
+.agenda-quadrant .next-ten { width: 100%; box-sizing: border-box; }
+.agenda-quadrant .next-ten h1 { --agenda-type: 17px; font-weight: 700; }
+.agenda-quadrant .next-ten td { border-bottom: 1px solid black; height: 20px; --agenda-type: 13px; vertical-align: middle; }
+.agenda-quadrant .next-ten .section th { --agenda-type: 12px; font-weight: 700; background: black; color: white; }
+.agenda-quadrant .next-ten .group-gap td { height: 6px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+.agenda-quadrant .next-ten .date { --agenda-type: 12px; }
+.agenda-quadrant .next-ten .time { --agenda-type: 12px; }
+.agenda-quadrant .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+.agenda-quadrant .next-ten .event { font-weight: 600; }
+.agenda-quadrant .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 16px; max-height: 32px; }
+.agenda-quadrant .agenda-date-col { width: 90px; }
+.agenda-quadrant .agenda-time-col { width: 45px; }
