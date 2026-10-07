@@ -63,3 +63,11 @@
 .agenda-quadrant .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 16px; max-height: 32px; }
 .agenda-quadrant .agenda-date-col { width: 90px; }
 .agenda-quadrant .agenda-time-col { width: 45px; }
+
+.agenda-half-horizontal .next-ten .section-continuation th {
+  background: white;
+  color: black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  font-weight: 400;
+}
