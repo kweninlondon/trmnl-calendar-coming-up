@@ -7,7 +7,7 @@ Display the next events from up to five ICS calendars, however far ahead they ar
 ## Features
 
 - Up to five ICS feed links, merged chronologically.
-- Choose 1–15 events (default 10), with no future date cutoff.
+- Choose a maximum of 1–15 events (default 10), with no future date cutoff. Smaller screens may show fewer; the on-screen count reports visible events.
 - Optional Today / This week / Next week / Later groups; empty groups stay hidden.
 - Monday–Sunday weeks in the selected display timezone.
 - Default title Coming Up; automatic description for one feed; optional title and footer overrides.
@@ -37,7 +37,7 @@ Edit `src/serverless.js`, then rebuild the bundled `dist/serverless.js`. The pin
 
 ## Current limitations
 
-Full-screen layout adapts to available height and shows + X more events when rows do not fit. Local browser checks passed at 800×480 and 1200×900; live TRMNL OG confirmation and small playlist layouts remain. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
+Full-screen layout adapts to available height and reports the visible event count after fitting rows. Local browser checks passed at 800×480 and 1200×900; live TRMNL OG confirmation and small playlist layouts remain. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
 
 ## License
 

@@ -4,7 +4,7 @@
     font-family: Arial, Helvetica, sans-serif;
   }
   .next-ten { width: 100%; padding: 8px 20px; box-sizing: border-box; }
-  .next-ten .more-events { font-size: 15px; font-weight: 600; line-height: 20px; margin: 6px 0 0; }
+  .next-ten .event-count { font-size: 15px; font-weight: 600; line-height: 20px; margin: 6px 0 0; }
   .next-ten [hidden] { display: none !important; }
   .next-ten h1 { font-size: 25px; margin: 0 0 5px; font-weight: 700; }
   .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -49,7 +49,7 @@
       <tr><td>No upcoming events.</td></tr>
       {% endfor %}
     </table>
-    <p class="more-events" hidden></p>
+    <p class="event-count">{{ events.size }} events coming up</p>
     {% endif %}
   </div>
 </div>
@@ -63,19 +63,23 @@
   function fitCalendar() {
     document.querySelectorAll('.next-ten').forEach(function (root) {
       const table = root.querySelector('table');
-      const notice = root.querySelector('.more-events');
+      const notice = root.querySelector('.event-count');
       if (!table || !notice) return;
       const rows = Array.from(table.querySelectorAll('tr'));
       const events = rows.filter(row => row.classList.contains('event-row'));
-      if (!events.length) return;
+      if (!events.length) { notice.textContent = '0 events coming up'; return; }
       rows.forEach(row => { row.hidden = false; });
-      notice.hidden = true;
+      notice.hidden = false;
+      function updateCount(visible) {
+        notice.textContent = visible + ' event' + (visible === 1 ? '' : 's') + ' coming up';
+      }
+      updateCount(events.length);
       const layout = root.closest('.layout');
       const screen = root.closest('.screen') || layout.parentElement;
       const footer = screen.querySelector('.title_bar');
       const bottom = Math.min(layout.getBoundingClientRect().bottom,
         footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
-      if (table.getBoundingClientRect().bottom <= bottom) return;
+      if (notice.getBoundingClientRect().bottom <= bottom) return;
       notice.hidden = false;
       let visible = events.length;
       while (visible > 0) {
@@ -85,7 +89,7 @@
         // Remove headings and gaps with no remaining event beneath them.
         let lastEvent = visible ? rows.indexOf(events[visible - 1]) : -1;
         rows.forEach((row, index) => { if (index > lastEvent) row.hidden = true; });
-        notice.textContent = '+ ' + (events.length - visible) + ' more event' + (events.length - visible === 1 ? '' : 's');
+        updateCount(visible);
         if (notice.getBoundingClientRect().bottom <= bottom) break;
       }
     });

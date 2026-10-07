@@ -35,7 +35,8 @@
 
 - keyname: event_limit
   field_type: number
-  name: Number of upcoming events
+  name: Maximum events
+  description: Show up to this many upcoming events. Smaller screens may display fewer.
   min: 1
   max: 15
   step: 1
