@@ -54,3 +54,5 @@ OG overflow: copy the latest full.html. It measures available height and preserv
 Half vertical is available in layouts/half_vertical.html. Paste it into its matching tab; save and preview using your target device. Dates omit the year in this narrower view. No Serverless changes needed.
 
 Half horizontal is available in layouts/half_horizontal.html. It uses two columns, ordered down the left then down the right. Copy it to Half horizontal; the current Serverless code supports it unchanged.
+
+Quadrant is available in layouts/quadrant.html. Copy into Quadrant, save and preview on your device. No Serverless changes needed. Group gaps are reduced in this smaller layout to preserve space for events.
