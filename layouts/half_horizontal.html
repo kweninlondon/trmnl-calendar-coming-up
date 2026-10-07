@@ -1,6 +1,6 @@
 <!-- Paste into Half horizontal. Read down the left column, then the right. -->
 
-<div class="layout agenda-half-horizontal layout--col layout--top calendar-horizontal pt--1.5" data-grouping="{{ grouping }}">
+<div class="layout agenda-half-horizontal layout--col layout--top calendar-horizontal p--0 pt--1.5 gap--none" data-grouping="{{ grouping }}">
     {% assign heading_title = title | default: 'Coming Up' %}
     {% assign custom_title = trmnl.plugin_settings.custom_fields_values.title_override | strip %}
     {% if heading_title == 'Upcoming events' and custom_title == blank %}
@@ -31,7 +31,7 @@
       <tr class="event-row" data-group="{{ event.group | escape }}">
         <td class="date py--0.5 px--0">{% assign date_year = event.date | split: ' ' | last %}{{ event.date | remove: date_year | strip | escape }}</td>
         <td class="time py--0.5 px--0">{{ event.time | escape }}</td>
-        <td class="event py--1 px--0"><span class="event-name">{{ event.title | escape }}</span>{% if show_calendar %}<span class="calendar-label">{{ event.calendar | escape }}</span>{% endif %}</td>
+        <td class="event py--0.5 px--0"><span class="event-name">{{ event.title | escape }}</span>{% if show_calendar %}<span class="calendar-label">{{ event.calendar | escape }}</span>{% endif %}</td>
       </tr>
       {% else %}
       {% if column == 0 %}<tr><td>No upcoming events.</td></tr>{% endif %}

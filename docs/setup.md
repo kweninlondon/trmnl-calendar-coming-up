@@ -94,6 +94,7 @@ node tests/layout.cjs
 LAYOUT_FILE=layouts/half_vertical.html node tests/layout.cjs
 LAYOUT_FILE=layouts/quadrant.html node tests/layout.cjs
 node tests/horizontal.cjs
+node tests/horizontal-framework.cjs
 ```
 
 ICAL.js 2.2.1 is vendored under MPL-2.0. The build adapts its ES-module export for TRMNL; retain its license and upstream attribution. Our application code is MIT licensed.
