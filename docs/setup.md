@@ -82,6 +82,7 @@ Build and parser checks (Node 20+):
 ```sh
 node scripts/build.cjs
 node tests/calendar.cjs
+node tests/publication.cjs
 ```
 
 Browser checks require Playwright plus Chromium. Download the official stylesheet once and set `FRAMEWORK_CSS`; the fixture isolates its native spacing utilities from the page shell. Optionally set `BROWSER_PATH` for an existing browser:
@@ -96,3 +97,11 @@ node tests/horizontal.cjs
 ```
 
 ICAL.js 2.2.1 is vendored under MPL-2.0. The build adapts its ES-module export for TRMNL; retain its license and upstream attribution. Our application code is MIT licensed.
+
+## Publication stylesheet
+
+Shared links to `assets/coming-up.css` via jsDelivr, pinned to an immutable Git commit.
+This avoids embedding custom CSS in the markup that Chef scans. No calendar data is sent to the CDN.
+Layout styles are scoped to each layout root to avoid cross-layout conflicts in mashups.
+When changing this stylesheet, publish its new commit and update Shared to pin that commit.
+`tests/publication.cjs` checks both the published Chef terms and the broader best-practices list.

@@ -1,29 +1,18 @@
 <!-- Paste into the TRMNL private plugin's Half vertical layout. -->
-<style>
-  .next-ten { width: 100%; box-sizing: border-box; }
-  .next-ten h1 { --agenda-type: 20px; font-weight: 700; }
-  .next-ten td { border-bottom: 1px solid black; height: 22px; --agenda-type: 14px; vertical-align: middle; }
-  .next-ten .section th { --agenda-type: 13px; font-weight: 700; background: black; color: white; }
-  .next-ten .group-gap td { height: 22px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
-  .next-ten .date { --agenda-type: 12px; }
-  .next-ten .time { --agenda-type: 12px; }
-  .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
-  .next-ten .event { font-weight: 600; }
-  .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 17px; max-height: 34px; }
-</style>
-<div class="layout layout--col layout--top">
+
+<div class="layout agenda-half-vertical layout--col layout--top">
   <div class="next-ten py--2 px--2.5">
-    {% assign display_title = title | default: 'Coming Up' %}
+    {% assign heading_title = title | default: 'Coming Up' %}
     {% assign custom_title = trmnl.plugin_settings.custom_fields_values.title_override | strip %}
-    {% if display_title == 'Upcoming events' and custom_title == blank %}
-      {% assign display_title = 'Coming Up' %}
+    {% if heading_title == 'Upcoming events' and custom_title == blank %}
+      {% assign heading_title = 'Coming Up' %}
     {% endif %}
-    <h1 class="mt--0 mb--1.5 mx--0" data-count-template="{{ title_count_template | escape }}">{{ display_title | escape }}</h1>
+    <h1 class="mt--0 mb--1.5 mx--0" data-count-template="{{ title_count_template | escape }}">{{ heading_title | escape }}</h1>
     {% if error != blank %}<p>{{ error | escape }}</p>{% else %}
     <table>
       <colgroup>
-        <col style="width: 90px;">
-        <col style="width: 45px;">
+        <col class="agenda-date-col">
+        <col class="agenda-time-col">
         <col>
       </colgroup>
       {% assign previous_group = '' %}

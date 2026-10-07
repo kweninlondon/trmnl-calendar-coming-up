@@ -1,18 +1,6 @@
-<!-- Shared styles and responsive fitting used by all four layout tabs. -->
-<style>
-  /* Each element supplies its own dimensions; child elements inherit typography normally. */
-  :where(.next-ten, .next-ten *, .calendar-horizontal, .calendar-horizontal > h1) {
-    --agenda-type: initial;
-  }
-  .next-ten, .next-ten *, .calendar-horizontal > h1 {
-    font-size: var(--agenda-type, inherit);
-  }
-  .next-ten, .next-ten h1, .next-ten td, .next-ten th {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .next-ten [hidden] { display: none !important; }
-</style>
+<!-- Shared stylesheet and responsive fitting used by all four layout tabs. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kweninlondon/trmnl-calendar-coming-up@4c5155e9f8070149f3290838deaed933562587b2/assets/coming-up.css">
+
 <script>
 (function () {
   function fitCalendar() {
