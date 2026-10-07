@@ -1,0 +1,104 @@
+<!-- Shared styles and responsive fitting used by all four layout tabs. -->
+<style>
+  .next-ten, .next-ten h1, .next-ten td, .next-ten th {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .next-ten [hidden] { display: none !important; }
+</style>
+<script>
+(function () {
+  function fitCalendar() {
+    document.querySelectorAll('.next-ten').forEach(function (root) {
+      if (root.closest('.calendar-horizontal')) return;
+      const table = root.querySelector('table');
+      if (!table) return;
+      const rows = Array.from(table.querySelectorAll('tr'));
+      const events = rows.filter(row => row.classList.contains('event-row'));
+      const layout = root.closest('.layout');
+      const screen = root.closest('.screen') || layout.parentElement;
+      const footer = layout.nextElementSibling && layout.nextElementSibling.classList.contains('title_bar')
+        ? layout.nextElementSibling : layout.parentElement.querySelector('.title_bar');
+      function updateCount(visible) {
+        const targets = [root.querySelector('h1'), footer && footer.querySelector('.title')];
+        targets.filter(Boolean).forEach(function (target) {
+          const template = target.getAttribute('data-count-template');
+          if (template && template.includes('{count}')) {
+            target.textContent = template.replace(/\{count\}/g, String(visible));
+          }
+        });
+      }
+      rows.forEach(row => { row.hidden = false; });
+      updateCount(events.length);
+      if (!events.length) return;
+      const bottom = Math.min(layout.getBoundingClientRect().bottom,
+        footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
+      if (table.getBoundingClientRect().bottom <= bottom) return;
+      let visible = events.length;
+      while (visible > 0) {
+        const firstHidden = rows.indexOf(events[visible - 1]);
+        rows.slice(firstHidden).forEach(row => { row.hidden = true; });
+        visible--;
+        // Remove headings and gaps with no remaining event beneath them.
+        let lastEvent = visible ? rows.indexOf(events[visible - 1]) : -1;
+        rows.forEach((row, index) => { if (index > lastEvent) row.hidden = true; });
+        updateCount(visible);
+        if (table.getBoundingClientRect().bottom <= bottom) break;
+      }
+    });
+  }
+  function fitHorizontal() {
+    document.querySelectorAll('.calendar-horizontal').forEach(function (layout) {
+      const tables = Array.from(layout.querySelectorAll('table'));
+      if (tables.length !== 2) return;
+      if (!layout.calendarSourceRows) layout.calendarSourceRows = Array.from(layout.querySelectorAll('.event-row')).map(row => row.cloneNode(true));
+      const source = layout.calendarSourceRows;
+      const screen = layout.closest('.screen') || layout.parentElement;
+      const footer = layout.nextElementSibling && layout.nextElementSibling.classList.contains('title_bar')
+        ? layout.nextElementSibling : layout.parentElement.querySelector('.title_bar');
+      const grouped = layout.getAttribute('data-grouping') === 'true';
+      function updateCount(count) {
+        [layout.querySelector('h1'), footer && footer.querySelector('.title')].filter(Boolean).forEach(function (target) {
+          const template = target.getAttribute('data-count-template');
+          if (template && template.includes('{count}')) target.textContent = template.replace(/\{count\}/g, String(count));
+        });
+      }
+      if (!source.length) { updateCount(0); return; }
+      function fill(table, rows) {
+        Array.from(table.querySelectorAll('tr')).forEach(row => row.remove());
+        let body = table.querySelector('tbody');
+        if (!body) { body = document.createElement('tbody'); table.appendChild(body); }
+        let previous = '';
+        rows.forEach(function (row, index) {
+          const group = row.getAttribute('data-group');
+          if (grouped && group !== previous) {
+            if (index) {
+              const gap = document.createElement('tr'); gap.className = 'group-gap';
+              const cell = document.createElement('td'); cell.colSpan = 3; gap.appendChild(cell); body.appendChild(gap);
+            }
+            const heading = document.createElement('tr'); heading.className = 'section';
+            const cell = document.createElement('th'); cell.colSpan = 3; cell.textContent = group;
+            heading.appendChild(cell); body.appendChild(heading); previous = group;
+          }
+          body.appendChild(row.cloneNode(true));
+        });
+      }
+      // Reduce the chronological prefix, then rebalance it across both columns.
+      // This avoids skipping events from the bottom of the left column.
+      for (let count = source.length; count >= 0; count--) {
+        const split = Math.ceil(count / 2);
+        fill(tables[0], source.slice(0, split));
+        fill(tables[1], source.slice(split, count));
+        updateCount(count);
+        const bottom = Math.min(layout.getBoundingClientRect().bottom,
+          footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
+        if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) break;
+      }
+    });
+  }
+  function fitAll() { fitCalendar(); fitHorizontal(); }
+  function ready() { fitAll(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
+  window.addEventListener('resize', fitAll);
+})();
+</script>

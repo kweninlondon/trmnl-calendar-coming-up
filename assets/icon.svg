@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Coming Up</title>
+  <desc id="desc">A calendar containing two groups of upcoming events, with one event followed by two events.</desc>
+  <rect x="64" y="96" width="384" height="352" rx="40" fill="white" stroke="black" stroke-width="28"/>
+  <g fill="none" stroke="black" stroke-linecap="round">
+    <path d="M160 64V128M352 64V128" stroke-width="32"/>
+    <path d="M78 176H434" stroke-width="24" stroke-linecap="butt"/>
+  </g>
+  <g fill="black">
+    <rect x="112" y="212" width="288" height="22" rx="4"/>
+    <circle cx="122" cy="258" r="7"/>
+    <rect x="148" y="251" width="224" height="14" rx="7"/>
+    <rect x="112" y="302" width="288" height="22" rx="4"/>
+    <circle cx="122" cy="348" r="7"/>
+    <rect x="148" y="341" width="192" height="14" rx="7"/>
+    <circle cx="122" cy="386" r="7"/>
+    <rect x="148" y="379" width="224" height="14" rx="7"/>
+  </g>
+</svg>

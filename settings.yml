@@ -1,0 +1,69 @@
+- keyname: ics_1
+  field_type: string
+  name: Calendar 1 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: false
+
+- keyname: ics_2
+  field_type: string
+  name: Calendar 2 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_3
+  field_type: string
+  name: Calendar 3 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_4
+  field_type: string
+  name: Calendar 4 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: ics_5
+  field_type: string
+  name: Calendar 5 ICS link
+  description: Paste the calendar feed link, not its browser viewing link.
+  group: Calendars
+  optional: true
+
+- keyname: event_limit
+  field_type: number
+  name: Maximum events
+  description: Show up to this many upcoming events. Smaller screens may display fewer.
+  min: 1
+  max: 15
+  step: 1
+  default: 10
+- keyname: group_events
+  field_type: boolean
+  name: Group by Today, This week, Next week and Later
+  default: true
+- keyname: time_zone
+  field_type: time_zone
+  name: Display timezone
+  description: Used for event times and Monday-to-Sunday week boundaries.
+  default: Europe/London
+- keyname: title_override
+  field_type: string
+  name: Custom title
+  optional: true
+  maxlength: 150
+  group: Title and footer
+  description: Leave blank for Coming Up in the calendar name, or Coming Up for multiple calendars.
+  help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
+- keyname: footer_override
+  field_type: string
+  name: Custom footer
+  optional: true
+  maxlength: 150
+  group: Title and footer
+  description: Leave blank for the description or event count.
+  placeholder: '{count} events coming up'
+  help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
