@@ -71,3 +71,14 @@
   border-bottom: 1px solid black;
   font-weight: 400;
 }
+
+/* Compact OG half-horizontal spacing; event names and calendar labels retain their sizes. */
+.layout.agenda-half-horizontal { --tn-pt: 0px; }
+.layout.agenda-half-horizontal > h1 { --tn-mb: 0px; line-height: 22px; }
+.agenda-half-horizontal .next-ten .section th,
+.agenda-half-horizontal .next-ten .section-continuation th {
+  --tn-pt: 2px;
+  --tn-pb: 2px;
+  line-height: 16px;
+}
+.agenda-half-horizontal .next-ten .group-gap td { height: 4px; }

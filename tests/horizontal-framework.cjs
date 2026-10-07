@@ -16,6 +16,6 @@ const continuation=await page.locator('.section-continuation th').textContent();
 const appearance=await page.locator('.section-continuation th').evaluate(e=>({background:getComputedStyle(e).backgroundColor,ink:getComputedStyle(e).color,top:getComputedStyle(e).borderTopWidth,bottom:getComputedStyle(e).borderBottomWidth,weight:getComputedStyle(e).fontWeight}));assert.equal(appearance.background,'rgb(255, 255, 255)');assert.equal(appearance.ink,'rgb(0, 0, 0)');assert.equal(appearance.top,'1px');assert.equal(appearance.bottom,'1px');assert.equal(appearance.weight,'400');
 console.log('Actual Framework OG half-horizontal:',result,'Continuation heading verified.');
 assert.deepEqual(result.indices,Array.from({length:result.count},(_,i)=>i));assert(result.bottoms.every(n=>n<=result.footer));assert.equal(result.labels,result.count);
-assert(result.count>=4, 'OG half-horizontal should fit at least four of the grouped demo events');
+assert(result.count>=6, 'OG half-horizontal should fit at least six of the grouped demo events');
 }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1});
