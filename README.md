@@ -7,7 +7,7 @@ Display the next events from up to five ICS calendars, however far ahead they ar
 ## Features
 
 - Up to five ICS feed links, merged chronologically.
-- Choose a maximum of 1–15 events (default 10), with no future date cutoff. Smaller screens may show fewer; the on-screen count reports visible events.
+- Choose a maximum of 1–15 events (default 10), with no future date cutoff. Smaller screens may show fewer; the {count} title/footer placeholder reports visible events without an extra count line.
 - Optional Today / This week / Next week / Later groups; empty groups stay hidden.
 - Monday–Sunday weeks in the selected display timezone.
 - Default title Coming Up; automatic description for one feed; optional title and footer overrides.

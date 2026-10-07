@@ -57,7 +57,7 @@
   maxlength: 150
   group: Title and footer
   description: Leave blank for Coming Up.
-  help_text: 'Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
+  help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
 - keyname: footer_override
   field_type: string
   name: Custom footer
@@ -65,5 +65,5 @@
   maxlength: 150
   group: Title and footer
   description: Leave blank for the description or event count.
-  placeholder: 'Next {count} events from {calendar_count} calendars'
-  help_text: 'Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'
+  placeholder: '{count} events coming up'
+  help_text: '{count} reports events visible on the screen. Optional placeholders: {count}, {limit}, {calendars}, {calendar_count}, {description}.'

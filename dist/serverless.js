@@ -164,8 +164,11 @@ async function run(input) {
       description: feeds.length === 1 ? feeds[0].description : ''};
     const expand = value => clean(String(value).replace(/\{(count|limit|calendars|calendar_count|description)\}/g, (_, key) => values[key]), 150);
     const defaultTitle = 'Coming Up';
-    const defaultFooter = values.description || `Next ${events.length} events from ${feeds.length} calendar${feeds.length === 1 ? '' : 's'}`;
+    const defaultFooter = values.description || '{count} events coming up';
+    const countTemplate = value => clean(String(value).replace(/\{(limit|calendars|calendar_count|description)\}/g, (_, key) => values[key]), 150);
     return {title: expand(fields.title_override || defaultTitle), footer: expand(fields.footer_override || defaultFooter),
+      title_count_template: countTemplate(fields.title_override || defaultTitle),
+      footer_count_template: countTemplate(fields.footer_override || defaultFooter),
       events, show_calendar: feeds.length > 1, grouping, count: events.length,
       updated: new Intl.DateTimeFormat('en-GB', {timeZone: zone, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).format(now), error: ''};
   } catch (error) {

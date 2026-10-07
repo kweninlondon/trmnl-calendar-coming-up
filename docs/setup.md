@@ -24,7 +24,7 @@ For Google Calendar, the feed is found under calendar Settings > Integrate calen
 
 Five calendar inputs (four optional), a maximum of 1–15 upcoming events combined across all feeds, grouping on/off, display timezone, optional title and footer. Blank title uses Coming Up. Blank footer uses the single feed's description if present, otherwise the displayed event/calendar counts.
 
-Optional placeholders: {count} means actual selected event count; {limit} means requested maximum; {calendars} means feed names; {calendar_count} means distinct input feeds; {description} means the description of a single feed. Example: Next {count} events from {calendar_count} calendars.
+Optional placeholders: {count} means the visible event count after the layout fits the screen; {limit} means requested maximum; {calendars} means feed names; {calendar_count} means distinct input feeds; {description} means the description of a single feed. Example: Next {count} events from {calendar_count} calendars.
 
 Weeks run Monday–Sunday. Ended events disappear; ongoing events remain. Empty groups are hidden. No future date cutoff is imposed. Recurring occurrences count as individual events. Repeated identical input URLs are collapsed; events appearing in different feeds remain separate.
 
@@ -49,4 +49,4 @@ Live polling finding: direct Google ICS polling can fail with Malformed JSON bef
 
 Build size: the modern Node-compatible ICAL.js distribution is used rather than its larger ES5 compatibility build. The build fails if the final UTF-8 bundle reaches 100,000 bytes, matching the live editor limit.
 
-OG overflow: copy the latest full.html. It measures available height, preserves readable rows and shows X events coming up for the events actually displayed. There may be fewer visible rows to reserve the notice itself. Browser test: tests/layout.cjs (requires Playwright and a Chromium browser; optional BROWSER_PATH).
+OG overflow: copy the latest full.html. It measures available height and preserves readable rows. There is no extra count line. Use {count} in a title/footer override to report only the visible events. Update both Serverless and Full markup together for this behaviour. Browser test: tests/layout.cjs (requires Playwright and a Chromium browser; optional BROWSER_PATH).
