@@ -12,8 +12,9 @@
   .next-ten .group-gap td { height: 22px; padding: 2px 0; border-bottom: 1px solid transparent; font-size: 0; line-height: 0; }
   .next-ten .date { font-size: 12px; }
   .next-ten .time { font-size: 12px; }
-  .next-ten .calendar-label { font-size: 11px; font-weight: 400; }
-  .next-ten .event { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+  .next-ten .calendar-label { display: block; font-size: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
+  .next-ten .event { font-weight: 600; padding: 4px 0; }
+  .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 17px; max-height: 34px; }
 </style>
 <div class="layout layout--col layout--top">
   <div class="next-ten">
@@ -42,7 +43,7 @@
       <tr class="event-row">
         <td class="date">{% assign date_year = event.date | split: ' ' | last %}{{ event.date | remove: date_year | strip | escape }}</td>
         <td class="time">{{ event.time | escape }}</td>
-        <td class="event">{{ event.title | escape }}{% if show_calendar %}<span class="calendar-label"> · {{ event.calendar | escape }}</span>{% endif %}</td>
+        <td class="event"><span class="event-name">{{ event.title | escape }}</span>{% if show_calendar %}<span class="calendar-label">{{ event.calendar | escape }}</span>{% endif %}</td>
       </tr>
       {% else %}
       <tr><td>No upcoming events.</td></tr>
