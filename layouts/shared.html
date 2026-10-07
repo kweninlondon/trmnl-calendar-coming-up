@@ -1,5 +1,5 @@
 <!-- Shared stylesheet and responsive fitting used by all four layout tabs. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kweninlondon/trmnl-calendar-coming-up@4c5155e9f8070149f3290838deaed933562587b2/assets/coming-up.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kweninlondon/trmnl-calendar-coming-up@db4be7f85b13875856f2493abd8c69e757b86892/assets/coming-up.css">
 
 <script>
 (function () {
@@ -80,16 +80,23 @@
           body.appendChild(row.cloneNode(true));
         });
       }
-      // Reduce the chronological prefix, then rebalance it across both columns.
+      // Keep the largest chronological prefix and find a split that fits both columns.
       // This avoids skipping events from the bottom of the left column.
       for (let count = source.length; count >= 0; count--) {
-        const split = Math.ceil(count / 2);
-        fill(tables[0], source.slice(0, split));
-        fill(tables[1], source.slice(split, count), split ? source[split - 1].getAttribute('data-group') : undefined);
-        updateCount(count);
-        const bottom = Math.min(layout.getBoundingClientRect().bottom,
-          footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
-        if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) break;
+        const balanced = Math.ceil(count / 2);
+        const splits = count > 1
+          ? Array.from({length: count - 1}, (_, index) => index + 1).sort((a, b) => Math.abs(a - balanced) - Math.abs(b - balanced))
+          : [balanced];
+        let fits = false;
+        for (const split of splits) {
+          fill(tables[0], source.slice(0, split));
+          fill(tables[1], source.slice(split, count), split ? source[split - 1].getAttribute('data-group') : undefined);
+          updateCount(count);
+          const bottom = Math.min(layout.getBoundingClientRect().bottom,
+            footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
+          if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) { fits = true; break; }
+        }
+        if (fits) break;
       }
     });
   }
