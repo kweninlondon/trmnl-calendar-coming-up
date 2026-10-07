@@ -37,8 +37,10 @@ Edit `src/serverless.js`, then rebuild the bundled `dist/serverless.js`. The pin
 
 ## Current limitations
 
-Full-screen layout adapts to available height and reports the visible event count after fitting rows. Local browser checks passed at 800×480 and 1200×900; live TRMNL OG confirmation and small playlist layouts remain. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
+Full-screen and half-vertical layouts adapt to available height and reports the visible event count after fitting rows. Local browser checks passed at 800×480 and 1200×900; live half-vertical confirmation, half-horizontal and quadrant layouts remain. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
 
 ## License
 
 Original application code is MIT licensed; see [LICENSE](LICENSE). The unmodified ICAL.js parser retains MPL-2.0; see [its license](vendor/LICENSE-ICAL.txt) and [upstream source](https://github.com/kewisch/ical.js/tree/v2.2.1).
+
+Half vertical: paste `layouts/half_vertical.html` into the Half vertical tab. It uses compact fonts and omits the year from dates to leave more room for event titles. The same Serverless code and settings apply.
