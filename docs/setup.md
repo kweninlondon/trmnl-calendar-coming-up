@@ -52,3 +52,5 @@ Build size: the modern Node-compatible ICAL.js distribution is used rather than 
 OG overflow: copy the latest full.html. It measures available height and preserves readable rows. There is no extra count line. Use {count} in a title/footer override to report only the visible events. Update both Serverless and Full markup together for this behaviour. Browser test: tests/layout.cjs (requires Playwright and a Chromium browser; optional BROWSER_PATH).
 
 Half vertical is available in layouts/half_vertical.html. Paste it into its matching tab; save and preview using your target device. Dates omit the year in this narrower view. No Serverless changes needed.
+
+Half horizontal is available in layouts/half_horizontal.html. It uses two columns, ordered down the left then down the right. Copy it to Half horizontal; the current Serverless code supports it unchanged.
