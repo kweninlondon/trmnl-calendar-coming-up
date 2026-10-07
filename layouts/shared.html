@@ -59,7 +59,7 @@
         });
       }
       if (!source.length) { updateCount(0); return; }
-      function fill(table, rows) {
+      function fill(table, rows, continuedGroup) {
         Array.from(table.querySelectorAll('tr')).forEach(row => row.remove());
         let body = table.querySelector('tbody');
         if (!body) { body = document.createElement('tbody'); table.appendChild(body); }
@@ -71,8 +71,10 @@
               const gap = document.createElement('tr'); gap.className = 'group-gap';
               const cell = document.createElement('td'); cell.colSpan = 3; cell.className = 'py--0 px--0'; gap.appendChild(cell); body.appendChild(gap);
             }
-            const heading = document.createElement('tr'); heading.className = 'section';
-            const cell = document.createElement('th'); cell.colSpan = 3; cell.className = 'text--left pt--1.5 pb--1 px--1.5'; cell.textContent = group;
+            const continuing = index === 0 && group === continuedGroup;
+            const heading = document.createElement('tr'); heading.className = continuing ? 'section-continuation' : 'section';
+            const cell = document.createElement('th'); cell.colSpan = 3; cell.className = 'text--left pt--1.5 pb--1 px--1.5';
+            cell.textContent = group + (continuing ? ' (Cont.)' : '');
             heading.appendChild(cell); body.appendChild(heading); previous = group;
           }
           body.appendChild(row.cloneNode(true));
@@ -83,7 +85,7 @@
       for (let count = source.length; count >= 0; count--) {
         const split = Math.ceil(count / 2);
         fill(tables[0], source.slice(0, split));
-        fill(tables[1], source.slice(split, count));
+        fill(tables[1], source.slice(split, count), split ? source[split - 1].getAttribute('data-group') : undefined);
         updateCount(count);
         const bottom = Math.min(layout.getBoundingClientRect().bottom,
           footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;

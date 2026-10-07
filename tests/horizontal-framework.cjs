@@ -12,7 +12,9 @@ const table=rows=>`<div class="${rootClass}"><table><colgroup><col class="agenda
 await page.setContent(`<body class="trmnl"><style>${framework}${asset}</style><div class="screen screen--sm screen--1bit"><div class="view view--half_horizontal"><div class="${layoutClass}" data-grouping="true"><h1 class="${headingClass}">Coming Up</h1><div class="calendar-columns">${table(rows.slice(0,8))}${table(rows.slice(8))}</div></div><div class="title_bar"><span class="title" data-count-template="{count} events coming up">15 events coming up</span></div></div></div><script>${shared}</script>`,{waitUntil:'load'});
 await page.waitForTimeout(100);
 const result=await page.evaluate(()=>({count:document.querySelectorAll('.event-row').length,indices:Array.from(document.querySelectorAll('.event-row'),r=>+r.dataset.index),labels:document.querySelectorAll('.calendar-label').length,footer:document.querySelector('.title_bar').getBoundingClientRect().top,bottoms:Array.from(document.querySelectorAll('table'),t=>t.getBoundingClientRect().bottom),layout:document.querySelector('.layout').getBoundingClientRect().height}));
-console.log('Actual Framework OG half-horizontal:',result);
+const continuation=await page.locator('.section-continuation th').textContent();assert.equal(continuation,'This week (Cont.)');
+const appearance=await page.locator('.section-continuation th').evaluate(e=>({background:getComputedStyle(e).backgroundColor,ink:getComputedStyle(e).color}));assert.equal(appearance.background,'rgba(0, 0, 0, 0)');assert.equal(appearance.ink,'rgb(0, 0, 0)');
+console.log('Actual Framework OG half-horizontal:',result,'Continuation heading verified.');
 assert.deepEqual(result.indices,Array.from({length:result.count},(_,i)=>i));assert(result.bottoms.every(n=>n<=result.footer));assert.equal(result.labels,result.count);
 assert(result.count>=4, 'OG half-horizontal should fit at least four of the grouped demo events');
 }finally{await browser.close();}
