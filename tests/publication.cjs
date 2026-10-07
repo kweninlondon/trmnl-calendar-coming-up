@@ -1,6 +1,11 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const layouts = ['full', 'half_vertical', 'half_horizontal', 'quadrant', 'shared'];
+for (const name of layouts.filter(name => name !== 'shared')) {
+  const source = fs.readFileSync(`layouts/${name}.html`, 'utf8');
+  assert.equal((source.match(/class="layout /g) || []).length, 1, `${name} must contain one layout wrapper`);
+  assert(source.includes('class="title_bar"'));
+}
 const markup = layouts.map(name => fs.readFileSync(`layouts/${name}.html`, 'utf8')).join('\n');
 // Cover the broader best-practices list as well as the published Chef implementation.
 const properties = ['display', 'justify-content', 'padding', 'margin', 'background-color', 'color', 'border-radius', 'text-align', 'object-fit', 'font-size'];

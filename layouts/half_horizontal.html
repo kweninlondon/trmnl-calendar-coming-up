@@ -7,7 +7,7 @@
       {% assign heading_title = 'Coming Up' %}
     {% endif %}
     <h1 class="mt--0 mb--1.5 mx--2.5" data-count-template="{{ title_count_template | escape }}">{{ heading_title | escape }}</h1>
-{% if error != blank %}<p>{{ error | escape }}</p>{% else %}
+{% if error != blank %}<p class="title">Calendar unavailable</p><p class="description">{{ error | escape }}</p>{% else %}
 {% assign column_limit = events.size | plus: 1 | divided_by: 2 %}
 <div class="calendar-columns">
 {% for column in (0..1) %}

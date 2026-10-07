@@ -64,7 +64,7 @@ Duplicate identical feed links are ignored. The same event present in different 
 - Malformed JSON in plugin health: restore the JSON polling trigger above.
 - Save rejected above 100 KB: copy the current built file; the build checks that it is below 100,000 bytes.
 - Download timeout: the feed may be slow. A failed feed displays an error rather than a silently incomplete combined list.
-- A feed above 2 MB or a complex recurrence history can exceed runtime safeguards. TRMNL permits 5 seconds and 128 MB; downloads run in parallel, with a 3.5-second timeout where supported and a 1.2-second parsing budget.
+- A feed above 2 MB or a complex recurrence history can exceed runtime safeguards. TRMNL permits 5 seconds and 128 MB; downloads run in parallel, with a separate 3.5-second download deadline even when AbortSignal is unavailable, and a 1.2-second parsing budget. When native polling supplies all configured feeds, no downloads run in Serverless.
 - Blank description or calendar name: the feed may not provide those optional fields. Use an override.
 
 ## Validation and publication

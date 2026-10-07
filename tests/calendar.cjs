@@ -1,5 +1,5 @@
 const fs = require('fs'), vm = require('vm'), assert = require('assert');
-const context = vm.createContext({console, Date, Intl, URL, AbortSignal, TextDecoder, Uint8Array});
+const context = vm.createContext({console, Date, Intl, URL, AbortSignal, TextDecoder, Uint8Array, setTimeout, clearTimeout});
 vm.runInContext(fs.readFileSync('dist/serverless.js','utf8'), context);
 const header='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nX-WR-CALNAME:Lily\r\n';
 const event=(lines)=>'BEGIN:VEVENT\r\n'+lines.join('\r\n')+'\r\nEND:VEVENT\r\n';
@@ -49,5 +49,7 @@ context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+
  const bad=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});assert.equal(bad.events.length,0);assert(bad.error.includes('404'));assert(!JSON.stringify(bad).includes('example.com'));
  context.fetch=async()=>({ok:true,headers:{get:()=>null},text:async()=>'<html>not a feed</html>'});
  const html=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});assert(html.error.startsWith('Expected an ICS'));
- console.log('Passed: ended events, distant events, recurring exclusions, cancellations, moved occurrences, IANA timezone, annual recurrence, future-range changes/cancellations, five feeds, invalid links, settings and footer substitution.');
+ context.fetch=()=>new Promise(()=>{});
+ await assert.rejects(context.downloadFeeds(['https://example.com/slow.ics'],20),/downloads timed out/);
+ console.log('Passed: ended events, distant events, recurring exclusions, cancellations, moved occurrences, IANA timezone, annual recurrence, future-range changes/cancellations, five feeds, invalid links, settings, footer substitution and download deadline without AbortSignal.');
 })().catch(e=>{console.error(e); process.exitCode=1});
