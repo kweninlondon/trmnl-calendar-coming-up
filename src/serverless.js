@@ -125,6 +125,20 @@ async function fetchFeed(url) {
   if (!text.trimStart().startsWith('BEGIN:VCALENDAR')) throw new Error('Expected an ICS calendar feed, but the link returned another page.');
   return text;
 }
+// A separate deadline also covers runtimes whose fetch shim lacks AbortSignal.
+async function downloadFeeds(urls, timeoutMs = 3500) {
+  let timer;
+  try {
+    return await Promise.race([
+      Promise.all(urls.map(url => fetchFeed(url))),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Calendar downloads timed out. Try refreshing again or use a smaller feed.')), timeoutMs);
+      })
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 // Native polling can supply raw text inside a payload wrapper. Find calendar
 // strings without depending on a particular TRMNL plaintext wrapper key.
 function polledFeeds(input) {
@@ -151,14 +165,14 @@ async function run(input) {
   const zone = fields.time_zone || input.trmnl?.user?.time_zone || 'UTC';
   const now = new Date();
   const grouping = ![false, 'false', 'no', '0'].includes(fields.group_events);
-  const urls = [...new Set([1, 2, 3, 4, 5].map(i => String(fields[`ics_${i}`] || '').trim()).filter(Boolean))];
+  const urls = [...new Set([fields.ics_1, fields.ics_2, fields.ics_3, fields.ics_4, fields.ics_5].map(value => String(value || '').trim()).filter(Boolean))];
   let stage = 'timezone';
   try {
     parts(now, zone); // Validate timezone before processing any feed.
     if (!urls.length) throw new Error('Add at least one ICS calendar link in settings.');
     stage = 'download';
     const polled = polledFeeds(input);
-    const downloaded = polled.length === urls.length ? polled : await Promise.all(urls.map(url => fetchFeed(url)));
+    const downloaded = polled.length === urls.length ? polled : await downloadFeeds(urls);
     stage = 'parse';
     const deadline = Date.now() + 1200;
     const feeds = downloaded.map((text, i) => parseFeed(text, i, limit, zone, now, deadline));

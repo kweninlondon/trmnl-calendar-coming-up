@@ -1,11 +1,6 @@
-<!-- Shared styles and responsive fitting used by all four layout tabs. -->
-<style>
-  .next-ten, .next-ten h1, .next-ten td, .next-ten th {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .next-ten [hidden] { display: none !important; }
-</style>
+<!-- Shared stylesheet and responsive fitting used by all four layout tabs. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kweninlondon/trmnl-calendar-coming-up@db4be7f85b13875856f2493abd8c69e757b86892/assets/coming-up.css">
+
 <script>
 (function () {
   function fitCalendar() {
@@ -64,7 +59,7 @@
         });
       }
       if (!source.length) { updateCount(0); return; }
-      function fill(table, rows) {
+      function fill(table, rows, continuedGroup) {
         Array.from(table.querySelectorAll('tr')).forEach(row => row.remove());
         let body = table.querySelector('tbody');
         if (!body) { body = document.createElement('tbody'); table.appendChild(body); }
@@ -74,25 +69,34 @@
           if (grouped && group !== previous) {
             if (index) {
               const gap = document.createElement('tr'); gap.className = 'group-gap';
-              const cell = document.createElement('td'); cell.colSpan = 3; gap.appendChild(cell); body.appendChild(gap);
+              const cell = document.createElement('td'); cell.colSpan = 3; cell.className = 'py--0 px--0'; gap.appendChild(cell); body.appendChild(gap);
             }
-            const heading = document.createElement('tr'); heading.className = 'section';
-            const cell = document.createElement('th'); cell.colSpan = 3; cell.textContent = group;
+            const continuing = index === 0 && group === continuedGroup;
+            const heading = document.createElement('tr'); heading.className = continuing ? 'section section-continuation' : 'section';
+            const cell = document.createElement('th'); cell.colSpan = 3; cell.className = 'text--left pt--1.5 pb--1 px--1.5';
+            cell.textContent = group + (continuing ? ' (Cont.)' : '');
             heading.appendChild(cell); body.appendChild(heading); previous = group;
           }
           body.appendChild(row.cloneNode(true));
         });
       }
-      // Reduce the chronological prefix, then rebalance it across both columns.
+      // Keep the largest chronological prefix and find a split that fits both columns.
       // This avoids skipping events from the bottom of the left column.
       for (let count = source.length; count >= 0; count--) {
-        const split = Math.ceil(count / 2);
-        fill(tables[0], source.slice(0, split));
-        fill(tables[1], source.slice(split, count));
-        updateCount(count);
-        const bottom = Math.min(layout.getBoundingClientRect().bottom,
-          footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
-        if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) break;
+        const balanced = Math.ceil(count / 2);
+        const splits = count > 1
+          ? Array.from({length: count - 1}, (_, index) => index + 1).sort((a, b) => Math.abs(a - balanced) - Math.abs(b - balanced))
+          : [balanced];
+        let fits = false;
+        for (const split of splits) {
+          fill(tables[0], source.slice(0, split));
+          fill(tables[1], source.slice(split, count), split ? source[split - 1].getAttribute('data-group') : undefined);
+          updateCount(count);
+          const bottom = Math.min(layout.getBoundingClientRect().bottom,
+            footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
+          if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) { fits = true; break; }
+        }
+        if (fits) break;
       }
     });
   }

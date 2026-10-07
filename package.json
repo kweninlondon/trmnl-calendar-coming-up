@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "Upcoming events from up to five ICS calendars, processed on TRMNL",
-  "scripts": {"build": "node scripts/build.cjs", "test": "node tests/calendar.cjs"},
-  "engines": {"node": ">=20"},
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test": "node tests/calendar.cjs && node tests/publication.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "license": "MIT"
 }

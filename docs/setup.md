@@ -64,16 +64,16 @@ Duplicate identical feed links are ignored. The same event present in different 
 - Malformed JSON in plugin health: restore the JSON polling trigger above.
 - Save rejected above 100 KB: copy the current built file; the build checks that it is below 100,000 bytes.
 - Download timeout: the feed may be slow. A failed feed displays an error rather than a silently incomplete combined list.
-- A feed above 2 MB or a complex recurrence history can exceed runtime safeguards. TRMNL permits 5 seconds and 128 MB; downloads run in parallel, with a 3.5-second timeout where supported and a 1.2-second parsing budget.
+- A feed above 2 MB or a complex recurrence history can exceed runtime safeguards. TRMNL permits 5 seconds and 128 MB; downloads run in parallel, with a separate 3.5-second download deadline even when AbortSignal is unavailable, and a 1.2-second parsing budget. When native polling supplies all configured feeds, no downloads run in Serverless.
 - Blank description or calendar name: the feed may not provide those optional fields. Use an override.
 
 ## Validation and publication
 
-The user has tested two live feeds, 15 selected events, title/footer overrides, grouping on/off and all four layouts in TRMNL. After the Shared refactor and future-recurring change support, another live smoke test is needed.
+The user has tested two live feeds, 15 selected events, title/footer overrides, grouping on/off, all four layouts, the Shared refactor, and an export/import into a fresh plugin.
 
 Local tests cover five merged feeds, excluded occurrences, moved and cancelled occurrences, changes/cancellation of this-and-future occurrences, timezone conversion, invalid feed responses, chronological layout fitting and visible counts.
 
-Before publication, verify five live feeds within the runtime budget and test recipe export/import to ensure settings, Serverless code, Shared and layout tabs all travel together. The repository and TRMNL recipe have not been made public.
+Five feeds have automated coverage; optional additional live testing can verify the runtime budget with five real feeds. The repository is public; TRMNL recipe submission is pending.
 
 ## Development
 
@@ -82,15 +82,27 @@ Build and parser checks (Node 20+):
 ```sh
 node scripts/build.cjs
 node tests/calendar.cjs
+node tests/publication.cjs
 ```
 
-Browser checks require Playwright plus Chromium. Optionally set `BROWSER_PATH` for an existing browser:
+Browser checks require Playwright plus Chromium. Download the official stylesheet once and set `FRAMEWORK_CSS`; the fixture isolates its native spacing utilities from the page shell. Optionally set `BROWSER_PATH` for an existing browser:
 
 ```sh
+curl -fL https://trmnl.com/css/3.4.0/plugins.css -o /tmp/trmnl-plugins.css
+export FRAMEWORK_CSS=/tmp/trmnl-plugins.css
 node tests/layout.cjs
 LAYOUT_FILE=layouts/half_vertical.html node tests/layout.cjs
 LAYOUT_FILE=layouts/quadrant.html node tests/layout.cjs
 node tests/horizontal.cjs
+node tests/horizontal-framework.cjs
 ```
 
 ICAL.js 2.2.1 is vendored under MPL-2.0. The build adapts its ES-module export for TRMNL; retain its license and upstream attribution. Our application code is MIT licensed.
+
+## Publication stylesheet
+
+Shared links to `assets/coming-up.css` via jsDelivr, pinned to an immutable Git commit.
+This avoids embedding custom CSS in the markup that Chef scans. No calendar data is sent to the CDN.
+Layout styles are scoped to each layout root to avoid cross-layout conflicts in mashups.
+When changing this stylesheet, publish its new commit and update Shared to pin that commit.
+`tests/publication.cjs` checks both the published Chef terms and the broader best-practices list.

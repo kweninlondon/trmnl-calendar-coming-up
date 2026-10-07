@@ -17,7 +17,7 @@ Display upcoming events from up to five ICS calendars, however far ahead they ar
 
 ## Where it runs
 
-**TRMNL Serverless** downloads and processes the feeds; TRMNL renders the screen. Users enter their links in plugin settings. No user-installed code, Google Apps Script project or Cloudflare account is needed.
+**TRMNL Serverless** downloads and processes the feeds; TRMNL renders the screen. Users enter their links in plugin settings. No user-installed code, Google Apps Script project or Cloudflare account is needed. Styling loads from a version-pinned public stylesheet served by jsDelivr; the CDN receives no calendar feed links or event data.
 
 ## Setup
 
@@ -32,6 +32,7 @@ Node 20+, no package installation required for parser tests:
 ```sh
 node scripts/build.cjs
 node tests/calendar.cjs
+node tests/publication.cjs
 ```
 
 Edit `src/serverless.js`, then rebuild `dist/serverless.js`. The build enforces TRMNL's 100 KB code limit. Browser test instructions are in [the setup guide](docs/setup.md).
