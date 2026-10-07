@@ -14,6 +14,12 @@ feed=parse(event(['UID:tz','DTSTART;TZID=Europe/London:20261007T181500','DTEND;T
 assert.equal(feed.events[0].time,'18:15');
 feed=parse(event(['UID:annual','DTSTART;VALUE=DATE:20200101','DTEND;VALUE=DATE:20200102','RRULE:FREQ=YEARLY','SUMMARY:Yearly']));
 assert.equal(feed.events.length,15); assert.equal(feed.events[0].date_key,'2027-01-01');
+feed=parse(event(['UID:range','DTSTART:20261005T120000Z','DTEND:20261005T130000Z','RRULE:FREQ=DAILY;COUNT=6','SUMMARY:Original'])+event(['UID:range','RECURRENCE-ID;RANGE=THISANDFUTURE:20261007T120000Z','DTSTART:20261007T140000Z','DTEND:20261007T153000Z','SUMMARY:Changed forever']));
+assert.equal(feed.events.length,5);
+assert.equal(feed.events[0].title,'Original');
+assert(feed.events.slice(1).every(e=>e.title==='Changed forever' && e.time==='15:00'));
+feed=parse(event(['UID:cancelrange','DTSTART:20261005T120000Z','DTEND:20261005T130000Z','RRULE:FREQ=DAILY','SUMMARY:Original'])+event(['UID:cancelrange','RECURRENCE-ID;RANGE=THISANDFUTURE:20261007T120000Z','STATUS:CANCELLED']));
+assert.equal(feed.events.length,1);
 context.AbortSignal = undefined;
 context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+event(['UID:z','DTSTART;VALUE=DATE:20300101','DTEND;VALUE=DATE:20300102','SUMMARY:Far ahead'])+'END:VCALENDAR\r\n'});
 (async()=>{
@@ -23,5 +29,21 @@ context.fetch=async ()=>({ok:true, headers:{get:()=>null}, text:async()=>header+
  context.fetch=async()=>{throw new Error('Should not fetch when polling supplied ICS');};
  const native=await context.run({data:polledText,trmnl:{plugin_settings:{custom_fields_values:{ics_1:'https://example.com/calendar.ics'}}}});
  assert.equal(native.error,''); assert.equal(native.events[0].title,'Native polling');
- console.log('Passed: ended events, distant events, recurring exclusions, cancellations, moved occurrences, IANA timezone, annual recurrence, settings and footer substitution.');
+ const fields={event_limit:15,group_events:true,footer_override:'{count} visible / {limit} max / {calendar_count} calendars'};
+ const fixtures={};
+ for(let i=1;i<=5;i++){
+  const address=`https://example.com/${i}.ics`;fields[`ics_${i}`]=address;
+  const body=Array.from({length:4},(_,n)=>event([`UID:${i}-${n}`,`DTSTART;VALUE=DATE:203001${String(n*5+i).padStart(2,'0')}`,`DTEND;VALUE=DATE:203001${String(n*5+i+1).padStart(2,'0')}`,`SUMMARY:Feed ${i} event ${n}`])).join('');
+  fixtures[address]=header.replace('X-WR-CALNAME:Lily',`X-WR-CALNAME:Calendar ${i}`)+body+'END:VCALENDAR\r\n';
+ }
+ context.fetch=async address=>({ok:true,headers:{get:()=>null},text:async()=>fixtures[address]});
+ const five=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});
+ assert.equal(five.error,'');assert.equal(five.events.length,15);assert.equal(five.footer,'15 visible / 15 max / 5 calendars');
+ assert.equal(five.footer_count_template,'{count} visible / 15 max / 5 calendars');assert(five.show_calendar);
+ assert.deepEqual(Array.from(five.events.slice(0,5),e=>e.calendar),['Calendar 1','Calendar 2','Calendar 3','Calendar 4','Calendar 5']);
+ context.fetch=async()=>({ok:false,status:404});
+ const bad=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});assert.equal(bad.events.length,0);assert(bad.error.includes('404'));assert(!JSON.stringify(bad).includes('example.com'));
+ context.fetch=async()=>({ok:true,headers:{get:()=>null},text:async()=>'<html>not a feed</html>'});
+ const html=await context.run({trmnl:{plugin_settings:{custom_fields_values:fields}}});assert(html.error.startsWith('Expected an ICS'));
+ console.log('Passed: ended events, distant events, recurring exclusions, cancellations, moved occurrences, IANA timezone, annual recurrence, future-range changes/cancellations, five feeds, invalid links, settings and footer substitution.');
 })().catch(e=>{console.error(e); process.exitCode=1});

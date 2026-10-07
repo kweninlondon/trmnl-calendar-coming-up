@@ -1,12 +1,7 @@
 <!-- Paste into Half horizontal. Read down the left column, then the right. -->
 <style>
-  .next-ten, .next-ten h1, .next-ten td, .next-ten th {
-    font-family: Arial, Helvetica, sans-serif;
-  }
   .next-ten { width: 50%; min-width: 0; padding: 0 10px; box-sizing: border-box; }
-  .next-ten [hidden] { display: none !important; }
   .next-ten h1 { font-size: 20px; margin: 0 0 5px; font-weight: 700; }
-  .next-ten table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .next-ten td { border-bottom: 1px solid black; height: 22px; padding: 2px 0; font-size: 14px; vertical-align: middle; }
   .next-ten .section th { text-align: left; font-size: 13px; font-weight: 700; padding: 5px 6px 3px; background: black; color: white; }
   .next-ten .group-gap td { height: 22px; padding: 2px 0; border-bottom: 1px solid transparent; font-size: 0; line-height: 0; }
@@ -68,59 +63,3 @@
   <span class="title" data-count-template="{{ footer_count_template | escape }}">{{ footer | escape }}</span>
   <span class="instance">Updated {{ updated | escape }}</span>
 </div>
-
-<script>
-(function () {
-  function fitHorizontal() {
-    document.querySelectorAll('.calendar-horizontal').forEach(function (layout) {
-      const tables = Array.from(layout.querySelectorAll('table'));
-      if (tables.length !== 2) return;
-      if (!layout.calendarSourceRows) layout.calendarSourceRows = Array.from(layout.querySelectorAll('.event-row')).map(row => row.cloneNode(true));
-      const source = layout.calendarSourceRows;
-      const screen = layout.closest('.screen') || layout.parentElement;
-      const footer = screen.querySelector('.title_bar');
-      const grouped = layout.getAttribute('data-grouping') === 'true';
-      function updateCount(count) {
-        [layout.querySelector('h1'), footer && footer.querySelector('.title')].filter(Boolean).forEach(function (target) {
-          const template = target.getAttribute('data-count-template');
-          if (template && template.includes('{count}')) target.textContent = template.replace(/\{count\}/g, String(count));
-        });
-      }
-      if (!source.length) { updateCount(0); return; }
-      function fill(table, rows) {
-        Array.from(table.querySelectorAll('tr')).forEach(row => row.remove());
-        let body = table.querySelector('tbody');
-        if (!body) { body = document.createElement('tbody'); table.appendChild(body); }
-        let previous = '';
-        rows.forEach(function (row, index) {
-          const group = row.getAttribute('data-group');
-          if (grouped && group !== previous) {
-            if (index) {
-              const gap = document.createElement('tr'); gap.className = 'group-gap';
-              const cell = document.createElement('td'); cell.colSpan = 3; gap.appendChild(cell); body.appendChild(gap);
-            }
-            const heading = document.createElement('tr'); heading.className = 'section';
-            const cell = document.createElement('th'); cell.colSpan = 3; cell.textContent = group;
-            heading.appendChild(cell); body.appendChild(heading); previous = group;
-          }
-          body.appendChild(row.cloneNode(true));
-        });
-      }
-      // Reduce the chronological prefix, then rebalance it across both columns.
-      // This avoids skipping events from the bottom of the left column.
-      for (let count = source.length; count >= 0; count--) {
-        const split = Math.ceil(count / 2);
-        fill(tables[0], source.slice(0, split));
-        fill(tables[1], source.slice(split, count));
-        updateCount(count);
-        const bottom = Math.min(layout.getBoundingClientRect().bottom,
-          footer ? footer.getBoundingClientRect().top : screen.getBoundingClientRect().bottom) - 8;
-        if (tables.every(table => table.getBoundingClientRect().bottom <= bottom)) break;
-      }
-    });
-  }
-  function ready() { fitHorizontal(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHorizontal); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
-  window.addEventListener('resize', fitHorizontal);
-})();
-</script>

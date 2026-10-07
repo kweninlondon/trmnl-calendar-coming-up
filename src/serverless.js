@@ -66,9 +66,6 @@ function parseFeed(text, index, limit, zone, now, deadline) {
   }
   // Process moved occurrences separately so an occurrence moved much earlier is not missed.
   for (const component of overrides) {
-    if (component.getFirstProperty('recurrence-id').getParameter('range')) {
-      throw new Error('This feed uses changes to all future occurrences, which this preview does not support yet.');
-    }
     const item = new ICAL.Event(component);
     if (component.hasProperty('dtstart')) add(item, item.startDate, item.endDate, item.recurrenceId.toString());
   }
@@ -78,14 +75,35 @@ function parseFeed(text, index, limit, zone, now, deadline) {
     if (!component.hasProperty('dtstart')) continue;
     if (!item.isRecurring()) { add(item, item.startDate, item.endDate, 'single'); continue; }
     const related = overrides.filter(c => c.getFirstPropertyValue('uid') === item.uid);
-    const replaced = new Set(related.map(c => c.getFirstPropertyValue('recurrence-id').toString()));
+    for (const exception of related) {
+      let normalized = exception;
+      if (!exception.hasProperty('dtstart') && exception.getFirstProperty('recurrence-id').getParameter('range') === 'THISANDFUTURE') {
+        // A cancellation may omit DTSTART. Supply the original occurrence time
+        // for the library's range arithmetic; its CANCELLED status is preserved.
+        normalized = new ICAL.Component(JSON.parse(JSON.stringify(exception.toJSON())));
+        const start = exception.getFirstPropertyValue('recurrence-id').clone();
+        normalized.addPropertyWithValue('dtstart', start);
+        const end = start.clone(); end.addDuration(item.duration);
+        normalized.addPropertyWithValue('dtend', end);
+      }
+      if (normalized.hasProperty('dtstart')) item.relateException(normalized);
+    }
+    const replaced = new Set(related.filter(c => !c.getFirstProperty('recurrence-id').getParameter('range'))
+      .map(c => c.getFirstPropertyValue('recurrence-id').toString()));
     const iterator = item.iterator();
     let accepted = 0, steps = 0, occurrence;
     while ((occurrence = iterator.next())) {
       if (++steps > 50000 || Date.now() > deadline) throw new Error('Recurrence expansion exceeded the runtime limit.');
       if (replaced.has(occurrence.toString())) continue;
-      const end = occurrence.clone(); end.addDuration(item.duration);
-      if (add(item, occurrence, end, occurrence.toString())) accepted++;
+      const detail = item.getOccurrenceDetails(occurrence);
+      const cancelled = String(detail.item.component.getFirstPropertyValue('status')).toUpperCase() === 'CANCELLED';
+      if (cancelled && detail.item.modifiesFuture()) {
+        const laterActiveRange = related.some(c => c.getFirstProperty('recurrence-id').getParameter('range') === 'THISANDFUTURE'
+          && c.getFirstPropertyValue('recurrence-id').compare(occurrence) > 0
+          && String(c.getFirstPropertyValue('status')).toUpperCase() !== 'CANCELLED');
+        if (!laterActiveRange) break;
+      }
+      if (add(detail.item, detail.startDate, detail.endDate, occurrence.toString())) accepted++;
       if (accepted >= limit) break;
     }
   }

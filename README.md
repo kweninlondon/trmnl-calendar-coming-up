@@ -1,50 +1,42 @@
-# Calendar Coming Up for TRMNL
+# Coming Up — a TRMNL calendar recipe
 
-Display the next events from up to five ICS calendars, however far ahead they are.
+Display upcoming events from up to five ICS calendars, however far ahead they are.
 
-**Status: private preview.** Local parser tests pass. Live TRMNL Serverless testing, additional device layouts and publication checks remain before release.
+**Status: private preview.** Two live feeds and all four layouts have been tested by the author in TRMNL. The latest Shared refactor and expanded recurrence handling need a final live smoke test before publication.
 
 ## Features
 
-- Up to five ICS feed links, merged chronologically.
-- Choose a maximum of 1–15 events (default 10), with no future date cutoff. Smaller screens may show fewer; the {count} title/footer placeholder reports visible events without an extra count line.
-- Optional Today / This week / Next week / Later groups; empty groups stay hidden.
-- Monday–Sunday weeks in the selected display timezone.
-- Default title Coming Up; automatic description for one feed; optional title and footer overrides.
-- Placeholders: `{count}`, `{limit}`, `{calendars}`, `{calendar_count}`, `{description}`.
-- Ongoing events remain until they end. Recurring occurrences count separately.
+- One to five ICS feed links, combined chronologically.
+- Maximum 1–15 events (default 10); fewer may fit on smaller screens.
+- Optional Today / This week / Next week / Later grouping, with Monday–Sunday weeks.
+- Full, half vertical, two-column half horizontal and quadrant layouts.
+- Separate calendar labels and two-line event names in compact layouts.
+- Custom title/footer, with `{count}` reporting visible events and `{limit}` reporting the chosen maximum.
+- Recurring events, excluded occurrences, moved occurrences and future occurrence changes/cancellations.
 
 ## Where it runs
 
-The complete JavaScript bundle runs in **TRMNL Serverless**. Users configure feed links inside TRMNL. No Google Apps Script, Cloudflare account, or user-installed code is required by this design. This hosting flow still needs a live smoke test.
+**TRMNL Serverless** downloads and processes the feeds; TRMNL renders the screen. Users enter their links in plugin settings. No user-installed code, Google Apps Script project or Cloudflare account is needed.
 
-## Installation for testing
+## Setup
 
-Create a separate private plugin and follow [the setup guide](docs/setup.md). Paste `settings.yml` into custom form fields, `dist/serverless.js` into the Node Serverless editor, and `layouts/full.html` into Full. The setup guide uses the deliverable filename `full.html` and `serverless.js`; these correspond to the paths above. Use `assets/icon.svg` as the icon.
+Follow [the setup guide](docs/setup.md). Use the JSON polling trigger specified there. Paste `settings.yml` into Custom Fields, `dist/serverless.js` into Serverless → Node, and **`layouts/shared.html` into Shared**. Paste each remaining layout into its matching tab. Use `assets/icon.svg` as the icon.
 
-Keep any existing working calendar plugin during testing. Personal ICS links belong only in TRMNL settings; do not commit them.
+Private ICS links belong in TRMNL settings, not in this repository. The GitHub repo stores the code; it does not run the plugin.
 
-## Development
+## Development and checks
 
-Node.js 20 or newer, no package installation needed:
+Node 20+, no package installation required for parser tests:
 
 ```sh
 node scripts/build.cjs
 node tests/calendar.cjs
 ```
 
-Edit `src/serverless.js`, then rebuild the bundled `dist/serverless.js`. The pinned ICAL.js 2.2.1 parser is vendored to avoid requiring TRMNL runtime package installation.
+Edit `src/serverless.js`, then rebuild `dist/serverless.js`. The build enforces TRMNL's 100 KB code limit. Browser test instructions are in [the setup guide](docs/setup.md).
 
-## Current limitations
-
-Full-screen and half-vertical layouts adapt to available height and reports the visible event count after fitting rows. Local browser checks passed at 800×480 and 1200×900; live device confirmation remains. All four layout tabs have implementations. Feeds using `RANGE=THISANDFUTURE` are rejected explicitly. Large feeds (over 2 MB each) and long recurrence histories may exceed runtime safeguards. Any feed failure displays an error instead of an incomplete combined list. Five-second TRMNL runtime compatibility remains to be verified live.
+Tests cover five feeds, invalid links, recurrence exceptions and future changes, timezones, layout fitting, chronological ordering and visible counts. Large or slow feeds can exceed TRMNL's runtime limits; see the setup guide. Five-feed live testing and recipe export/import remain release checks.
 
 ## License
 
-Original application code is MIT licensed; see [LICENSE](LICENSE). The unmodified ICAL.js parser retains MPL-2.0; see [its license](vendor/LICENSE-ICAL.txt) and [upstream source](https://github.com/kewisch/ical.js/tree/v2.2.1).
-
-Half vertical: paste `layouts/half_vertical.html` into the Half vertical tab. It uses compact fonts and omits the year from dates to leave more room for event titles. The same Serverless code and settings apply.
-
-Half horizontal: paste `layouts/half_horizontal.html` into Half horizontal. Events read down the left column then the right. The layout balances the earliest events that fit across two columns, wraps event names to two lines and keeps calendar labels separately visible.
-
-Quadrant: paste `layouts/quadrant.html` into Quadrant. A compact single column preserves two-line event names and calendar labels; only the earliest events that fit are displayed. The {count} placeholder reflects the visible count.
+Original code: [MIT](LICENSE). ICAL.js 2.2.1: [MPL-2.0](vendor/LICENSE-ICAL.txt), with [upstream source](https://github.com/kewisch/ical.js/tree/v2.2.1). Its vendored source is unmodified; the build adapts the module export in the generated bundle.
