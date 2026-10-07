@@ -69,11 +69,11 @@ Duplicate identical feed links are ignored. The same event present in different 
 
 ## Validation and publication
 
-The user has tested two live feeds, 15 selected events, title/footer overrides, grouping on/off and all four layouts in TRMNL. After the Shared refactor and future-recurring change support, another live smoke test is needed.
+The user has tested two live feeds, 15 selected events, title/footer overrides, grouping on/off, all four layouts, the Shared refactor, and an export/import into a fresh plugin.
 
 Local tests cover five merged feeds, excluded occurrences, moved and cancelled occurrences, changes/cancellation of this-and-future occurrences, timezone conversion, invalid feed responses, chronological layout fitting and visible counts.
 
-Before publication, verify five live feeds within the runtime budget and test recipe export/import to ensure settings, Serverless code, Shared and layout tabs all travel together. The repository and TRMNL recipe have not been made public.
+Five feeds have automated coverage; optional additional live testing can verify the runtime budget with five real feeds. The repository is public; TRMNL recipe submission is pending.
 
 ## Development
 
@@ -84,9 +84,11 @@ node scripts/build.cjs
 node tests/calendar.cjs
 ```
 
-Browser checks require Playwright plus Chromium. Optionally set `BROWSER_PATH` for an existing browser:
+Browser checks require Playwright plus Chromium. Download the official stylesheet once and set `FRAMEWORK_CSS`; the fixture isolates its native spacing utilities from the page shell. Optionally set `BROWSER_PATH` for an existing browser:
 
 ```sh
+curl -fL https://trmnl.com/css/3.4.0/plugins.css -o /tmp/trmnl-plugins.css
+export FRAMEWORK_CSS=/tmp/trmnl-plugins.css
 node tests/layout.cjs
 LAYOUT_FILE=layouts/half_vertical.html node tests/layout.cjs
 LAYOUT_FILE=layouts/quadrant.html node tests/layout.cjs

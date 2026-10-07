@@ -1,24 +1,24 @@
 <!-- Paste into the TRMNL private plugin's Half vertical layout. -->
 <style>
-  .next-ten { width: 100%; --agenda-inset: 8px 10px; box-sizing: border-box; }
-  .next-ten h1 { --agenda-type: 20px; --agenda-space: 0 0 5px; font-weight: 700; }
-  .next-ten td { border-bottom: 1px solid black; height: 22px; --agenda-inset: 2px 0; --agenda-type: 14px; vertical-align: middle; }
-  .next-ten .section th { --agenda-align: left; --agenda-type: 13px; font-weight: 700; --agenda-inset: 5px 6px 3px; background: black; color: white; }
-  .next-ten .group-gap td { height: 22px; --agenda-inset: 2px 0; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
+  .next-ten { width: 100%; box-sizing: border-box; }
+  .next-ten h1 { --agenda-type: 20px; font-weight: 700; }
+  .next-ten td { border-bottom: 1px solid black; height: 22px; --agenda-type: 14px; vertical-align: middle; }
+  .next-ten .section th { --agenda-type: 13px; font-weight: 700; background: black; color: white; }
+  .next-ten .group-gap td { height: 22px; border-bottom: 1px solid transparent; --agenda-type: 0; line-height: 0; }
   .next-ten .date { --agenda-type: 12px; }
   .next-ten .time { --agenda-type: 12px; }
   .next-ten .calendar-label { display: block; --agenda-type: 11px; line-height: 14px; font-weight: 400; white-space: normal; overflow-wrap: anywhere; }
-  .next-ten .event { font-weight: 600; --agenda-inset: 4px 0; }
+  .next-ten .event { font-weight: 600; }
   .next-ten .event-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 17px; max-height: 34px; }
 </style>
 <div class="layout layout--col layout--top">
-  <div class="next-ten">
+  <div class="next-ten py--2 px--2.5">
     {% assign display_title = title | default: 'Coming Up' %}
     {% assign custom_title = trmnl.plugin_settings.custom_fields_values.title_override | strip %}
     {% if display_title == 'Upcoming events' and custom_title == blank %}
       {% assign display_title = 'Coming Up' %}
     {% endif %}
-    <h1 data-count-template="{{ title_count_template | escape }}">{{ display_title | escape }}</h1>
+    <h1 class="mt--0 mb--1.5 mx--0" data-count-template="{{ title_count_template | escape }}">{{ display_title | escape }}</h1>
     {% if error != blank %}<p>{{ error | escape }}</p>{% else %}
     <table>
       <colgroup>
@@ -30,15 +30,15 @@
       {% for event in events limit: 15 %}
       {% if grouping and event.group != previous_group %}
       {% unless forloop.first %}
-      <tr class="group-gap"><td colspan="3"></td></tr>
+      <tr class="group-gap"><td class="py--0.5 px--0" colspan="3"></td></tr>
       {% endunless %}
-      <tr class="section"><th colspan="3">{{ event.group | escape }}</th></tr>
+      <tr class="section"><th class="text--left pt--1.5 pb--1 px--1.5" colspan="3">{{ event.group | escape }}</th></tr>
       {% assign previous_group = event.group %}
       {% endif %}
       <tr class="event-row">
-        <td class="date">{% assign date_year = event.date | split: ' ' | last %}{{ event.date | remove: date_year | strip | escape }}</td>
-        <td class="time">{{ event.time | escape }}</td>
-        <td class="event"><span class="event-name">{{ event.title | escape }}</span>{% if show_calendar %}<span class="calendar-label">{{ event.calendar | escape }}</span>{% endif %}</td>
+        <td class="date py--0.5 px--0">{% assign date_year = event.date | split: ' ' | last %}{{ event.date | remove: date_year | strip | escape }}</td>
+        <td class="time py--0.5 px--0">{{ event.time | escape }}</td>
+        <td class="event py--1 px--0"><span class="event-name">{{ event.title | escape }}</span>{% if show_calendar %}<span class="calendar-label">{{ event.calendar | escape }}</span>{% endif %}</td>
       </tr>
       {% else %}
       <tr><td>No upcoming events.</td></tr>

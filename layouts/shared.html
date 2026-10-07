@@ -3,17 +3,10 @@
   /* Each element supplies its own dimensions; child elements inherit typography normally. */
   :where(.next-ten, .next-ten *, .calendar-horizontal, .calendar-horizontal > h1) {
     --agenda-type: initial;
-    --agenda-inset: initial;
-    --agenda-space: initial;
-    --agenda-align: initial;
   }
   .next-ten, .next-ten *, .calendar-horizontal > h1 {
     font-size: var(--agenda-type, inherit);
-    padding: var(--agenda-inset, 0);
-    margin: var(--agenda-space, 0);
-    text-align: var(--agenda-align, inherit);
   }
-  .calendar-horizontal { padding-top: var(--agenda-top, 0); }
   .next-ten, .next-ten h1, .next-ten td, .next-ten th {
     font-family: Arial, Helvetica, sans-serif;
   }
@@ -88,10 +81,10 @@
           if (grouped && group !== previous) {
             if (index) {
               const gap = document.createElement('tr'); gap.className = 'group-gap';
-              const cell = document.createElement('td'); cell.colSpan = 3; gap.appendChild(cell); body.appendChild(gap);
+              const cell = document.createElement('td'); cell.colSpan = 3; cell.className = 'py--0 px--0'; gap.appendChild(cell); body.appendChild(gap);
             }
             const heading = document.createElement('tr'); heading.className = 'section';
-            const cell = document.createElement('th'); cell.colSpan = 3; cell.textContent = group;
+            const cell = document.createElement('th'); cell.colSpan = 3; cell.className = 'text--left pt--1.5 pb--1 px--1.5'; cell.textContent = group;
             heading.appendChild(cell); body.appendChild(heading); previous = group;
           }
           body.appendChild(row.cloneNode(true));
